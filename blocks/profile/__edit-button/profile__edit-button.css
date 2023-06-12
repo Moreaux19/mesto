@@ -3,5 +3,12 @@
   min-width: 24px;
   min-height: 24px;
   border: 1px solid #ffffff;
-  margin-left: 18px;
+  align-self: center;
+}
+
+@media screen and (max-width: 426px) {
+  .profile__edit-button {
+    min-width: 18px;
+    min-height: 18px;
+  }
 }
