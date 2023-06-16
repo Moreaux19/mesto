@@ -5,12 +5,14 @@
   font-size: 42px;
   line-height: 48px;
   color: #fff;
+  position: relative;
+  padding-right: 18px;
 }
 
 @media screen and (max-width: 426px) {
   .profile__name {
+    padding-right: 10px;
     text-align: center;
-    padding-left: 46px;
     font-size: 27px;
     line-height: 33px;
   }

@@ -2,6 +2,8 @@
 
 @import url(../vendor/inter.css);
 
+@import url(../blocks/link/link.css);
+
 @import url(../blocks/page/page.css);
 
 @import url(../blocks/page/__section/page__section.css);

@@ -1,12 +1,9 @@
 .profile__name-block {
-  margin: 0;
-  display: flex;
-  gap: 18px;
+  margin: 0 auto;
+  width: fit-content;
 }
 
 @media screen and (max-width: 426px) {
   .profile__name-block {
-    padding-top: 26px;
-    gap: 10px;
   }
 }

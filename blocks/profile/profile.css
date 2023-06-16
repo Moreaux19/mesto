@@ -9,5 +9,6 @@
   .profile {
     padding-top: 42px;
     display: block;
+    width: fit-content;
   }
 }
