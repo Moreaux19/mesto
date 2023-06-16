@@ -9,12 +9,12 @@
   padding-right: 18px;
 }
 
-@media screen and (max-width: 426px) {
+@media screen and (max-width: 810px) {
   .profile__name {
     padding-right: 10px;
     text-align: center;
-    font-size: 27px;
-    line-height: 33px;
+    font-size: 30px;
+    line-height: 40px;
   }
 }
 

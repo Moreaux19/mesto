@@ -4,7 +4,7 @@
   gap: 30px;
 }
 
-@media screen and (max-width: 426px) {
+@media screen and (max-width: 810px) {
   .profile__info {
     display: block;
     padding-bottom: 36px;
