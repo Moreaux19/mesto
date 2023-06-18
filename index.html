@@ -17,16 +17,16 @@
       <section class="profile page__section">
         <div class="profile__info">
           <div class="profile__avatar"></div>
-          <div>
+          <div class="profile__text-block">
             <div class="profile__name-block">
               <h1 class="profile__name">
-                Жак-Ив Кусто<button class="profile__edit-button link"></button>
+                Жак-Ив Кусто<button type="button" class="profile__edit-button link"></button>
               </h1>
             </div>
             <h2 class="profile__description">Исследователь океана</h2>
           </div>
         </div>
-        <button class="profile__add-button link"></button>
+        <button type="button" class="profile__add-button link"></button>
       </section>
       <section class="elements page__section">
         <article class="element">
@@ -36,22 +36,22 @@
             class="element__image"
           />
           <div class="element__group">
-            <h2 class="element__text">Карачаевск</h2>
-            <button class="element__button"></button>
+            <h2 class="element__text">Карачаево-Черкессия</h2>
+            <button type="button" class="element__button"></button>
           </div>
         </article>
         <article class="element">
           <img src="./images/elbrus.jpg" alt="изображение Эльбруса" class="element__image" />
           <div class="element__group">
             <h2 class="element__text">Эльбрус</h2>
-            <button class="element__button"></button>
+            <button type="button" class="element__button"></button>
           </div>
         </article>
         <article class="element">
           <img src="./images/dombay.jpg" alt="изображение Домбая" class="element__image" />
           <div class="element__group">
             <h2 class="element__text">Домбай</h2>
-            <button class="element__button"></button>
+            <button type="button" class="element__button"></button>
           </div>
         </article>
         <article class="element">
@@ -62,21 +62,21 @@
           />
           <div class="element__group">
             <h2 class="element__text">Карачаевск</h2>
-            <button class="element__button"></button>
+            <button type="button" class="element__button"></button>
           </div>
         </article>
         <article class="element">
           <img src="./images/elbrus.jpg" alt="изображение Эльбруса" class="element__image" />
           <div class="element__group">
             <h2 class="element__text">Эльбрус</h2>
-            <button class="element__button"></button>
+            <button type="button" class="element__button"></button>
           </div>
         </article>
         <article class="element">
           <img src="./images/dombay.jpg" alt="изображение Домбая" class="element__image" />
           <div class="element__group">
             <h2 class="element__text">Домбай</h2>
-            <button class="element__button"></button>
+            <button type="button" class="element__button"></button>
           </div>
         </article>
       </section>
@@ -84,5 +84,17 @@
     <footer class="footer page__section">
       <p class="footer__copyright">© 2020 Mesto Russia</p>
     </footer>
+
+    <div class="popup popup__visible">
+      <div class="popup__window">
+        <button class="popup__close-button link"></button>
+        <h2 class="popup__text">Редактировать профиль</h2>
+        <form action="" class="popup__form">
+          <input type="text" name="name" class="popup__input" />
+          <input type="text" name="description" class="popup__input" />
+          <button type="button" class="popup__save-button">Сохранить</button>
+        </form>
+      </div>
+    </div>
   </body>
 </html>
