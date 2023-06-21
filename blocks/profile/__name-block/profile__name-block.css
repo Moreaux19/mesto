@@ -1,4 +1,11 @@
 .profile__name-block {
-  margin: 0 auto;
+  margin: 0;
   width: fit-content;
+  position: relative;
+}
+
+@media screen and (max-width: 810px) {
+  .profile__name-block {
+    margin: 0 auto;
+  }
 }

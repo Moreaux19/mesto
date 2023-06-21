@@ -9,6 +9,11 @@
   min-height: 50px;
   background: #000000;
   border-radius: 2px;
+  transition: opacity 0.3s linear;
+}
+
+.popup__save-button:hover {
+  opacity: 0.6;
 }
 
 @media screen and (max-width: 768px) {
