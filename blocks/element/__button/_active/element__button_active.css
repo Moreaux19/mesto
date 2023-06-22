@@ -1,0 +1,11 @@
+.profile__button_active {
+  background: url(../../../../images/like_active.svg);
+  border: none;
+  min-width: 22px;
+  height: 19px;
+  padding: 0;
+}
+
+.profile__button_active:hover {
+  cursor: pointer;
+}

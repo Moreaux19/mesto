@@ -17,9 +17,6 @@
 
 @media screen and (max-width: 630px) {
   .elements {
-    padding-top: 36px;
     grid-template-columns: 1fr;
-    width: fit-content;
-    gap: 20px;
   }
 }

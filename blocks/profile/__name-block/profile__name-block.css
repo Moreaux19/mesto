@@ -2,6 +2,7 @@
   margin: 0;
   width: fit-content;
   position: relative;
+  display: flex;
 }
 
 @media screen and (max-width: 810px) {

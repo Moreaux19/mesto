@@ -5,13 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="pages/index.css" />
-    <script src="index.js" defer></script>
     <title>Mesto</title>
   </head>
   <body class="page">
     <header class="header page__section">
       <img src="images/logo.svg" alt="логотип Mesto" class="header__logo" />
-      <div class="header__line"></div>
     </header>
     <main class="content">
       <section class="profile page__section">
@@ -21,17 +19,19 @@
             <div class="profile__name-block">
               <h1 class="profile__name">Жак-Ив Кусто</h1>
               <button
-                id="edit-popup-button"
+                aria-label="редактирование профиля"
                 type="button"
                 class="profile__edit-button link"
               ></button>
             </div>
-            <h2 class="profile__description">Исследователь океана</h2>
+            <p class="profile__description">Исследователь океана</p>
           </div>
         </div>
-        <div class="profile__button-block">
-          <button id="add-popup-button" type="button" class="profile__add-button link"></button>
-        </div>
+        <button
+          aria-label="добавление изоображений"
+          type="button"
+          class="profile__add-button link"
+        ></button>
       </section>
       <section class="elements page__section">
         <article class="element">
@@ -90,22 +90,31 @@
       <p class="footer__copyright">© 2020 Mesto Russia</p>
     </footer>
 
-    <div id="popup" class="popup">
+    <div class="popup">
       <div class="popup__window">
-        <button type="button" id="close-popup-button" class="popup__close-button link"></button>
+        <button type="button" class="popup__close-button link"></button>
         <h2 class="popup__text">Редактировать профиль</h2>
-        <form class="popup__form">
-          <input id="name-input" type="text" name="name" class="popup__input" maxlength="20" />
+        <form name="form" class="popup__form">
           <input
+            required
+            id="name-input"
+            type="text"
+            name="name"
+            class="popup__input"
+            maxlength="20"
+          />
+          <input
+            required
             id="description-input"
             type="text"
             name="description"
             class="popup__input"
             maxlength="30"
           />
-          <button id="save-popup-button" type="submit" class="popup__save-button">Сохранить</button>
+          <button type="submit" class="popup__save-button">Сохранить</button>
         </form>
       </div>
     </div>
+    <script src="./script/index.js" defer></script>
   </body>
 </html>
