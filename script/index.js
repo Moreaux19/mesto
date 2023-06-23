@@ -8,9 +8,9 @@ const nameInput = popupForm.querySelector('#name-input');
 const descriptionInput = popupForm.querySelector('#description-input');
 
 editPopupButton.addEventListener('click', function () {
-  editPopup.classList.add('popup_opened');
   nameInput.value = nameProfile.textContent;
   descriptionInput.value = descriptionProfile.textContent;
+  editPopup.classList.add('popup_opened');
 });
 
 closePopupButton.addEventListener('click', function () {
