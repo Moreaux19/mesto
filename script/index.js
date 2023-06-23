@@ -6,18 +6,16 @@ const closePopupButton = editPopup.querySelector('.popup__close-button');
 const popupForm = editPopup.querySelector('.popup__form');
 const nameInput = popupForm.querySelector('#name-input');
 const descriptionInput = popupForm.querySelector('#description-input');
-const savePopupButton = popupForm.querySelector('.popup__save-button');
 
 editPopupButton.addEventListener('click', function () {
   editPopup.classList.add('popup_opened');
+  nameInput.value = nameProfile.textContent;
+  descriptionInput.value = descriptionProfile.textContent;
 });
 
 closePopupButton.addEventListener('click', function () {
   editPopup.classList.remove('popup_opened');
 });
-
-nameInput.value = nameProfile.textContent;
-descriptionInput.value = descriptionProfile.textContent;
 
 popupForm.addEventListener('submit', function (event) {
   event.preventDefault();
