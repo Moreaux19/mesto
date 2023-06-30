@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="images/logo.svg" />
     <link rel="stylesheet" href="pages/index.css" />
+    <script src="./script/index.js" defer></script>
     <title>Mesto</title>
   </head>
   <body class="page">
@@ -97,11 +98,15 @@
       <p class="footer__copyright">© 2020 Mesto Russia</p>
     </footer>
 
-    <div class="popup">
+    <div id="popup-profile" class="popup">
       <div class="popup__window">
-        <button type="button" class="popup__close-button link"></button>
+        <button
+          type="button"
+          id="popup-close-button-profile"
+          class="popup__close-button link"
+        ></button>
         <h2 class="popup__text">Редактировать профиль</h2>
-        <form name="form" class="popup__form">
+        <form id="popup-profile-form" name="form" class="popup__form">
           <input
             required
             id="name-input"
@@ -122,7 +127,39 @@
         </form>
       </div>
     </div>
-    <script src="./script/index.js" defer></script>
-    <template id="element-template"></template>
+
+    <div id="popup-element" class="popup">
+      <div class="popup__window">
+        <button
+          type="button"
+          id="popup-close-button-element"
+          class="popup__close-button link"
+        ></button>
+        <h2 class="popup__text">Новое место</h2>
+        <form id="popup-element-form" name="form" class="popup__form">
+          <input
+            required
+            id="image-name-input"
+            type="text"
+            name="image-name"
+            class="popup__input"
+            placeholder="Название"
+            autocomplete="off"
+          />
+          <input
+            required
+            id="image-url-input"
+            type="url"
+            name="image-url"
+            class="popup__input"
+            placeholder="Ссылка на картинку"
+            autocomplete="off"
+          />
+          <button type="submit" class="popup__save-button">Сохранить</button>
+        </form>
+      </div>
+    </div>
+
+    <template id="card-template"></template>
   </body>
 </html>
