@@ -35,64 +35,7 @@
           class="profile__add-button link"
         ></button>
       </section>
-      <section class="elements page__section">
-        <article class="element">
-          <button class="element__trash-button link"></button>
-          <img
-            src="./images/karachaevsk.jpg"
-            alt="изображение Карачаевска"
-            class="element__image"
-          />
-          <div class="element__group">
-            <h2 class="element__text">Карачаево-Черкессия</h2>
-            <button type="button" class="element__button"></button>
-          </div>
-        </article>
-        <article class="element">
-          <button class="element__trash-button link"></button>
-          <img src="./images/elbrus.jpg" alt="изображение Эльбруса" class="element__image" />
-          <div class="element__group">
-            <h2 class="element__text">Эльбрус</h2>
-            <button type="button" class="element__button"></button>
-          </div>
-        </article>
-        <article class="element">
-          <button class="element__trash-button link"></button>
-          <img src="./images/dombay.jpg" alt="изображение Домбая" class="element__image" />
-          <div class="element__group">
-            <h2 class="element__text">Домбай</h2>
-            <button type="button" class="element__button"></button>
-          </div>
-        </article>
-        <article class="element">
-          <button class="element__trash-button link"></button>
-          <img
-            src="./images/karachaevsk.jpg"
-            alt="изображение Карачаевска"
-            class="element__image"
-          />
-          <div class="element__group">
-            <h2 class="element__text">Карачаевск</h2>
-            <button type="button" class="element__button"></button>
-          </div>
-        </article>
-        <article class="element">
-          <button class="element__trash-button link"></button>
-          <img src="./images/elbrus.jpg" alt="изображение Эльбруса" class="element__image" />
-          <div class="element__group">
-            <h2 class="element__text">Эльбрус</h2>
-            <button type="button" class="element__button"></button>
-          </div>
-        </article>
-        <article class="element">
-          <button class="element__trash-button link"></button>
-          <img src="./images/dombay.jpg" alt="изображение Домбая" class="element__image" />
-          <div class="element__group">
-            <h2 class="element__text">Домбай</h2>
-            <button type="button" class="element__button"></button>
-          </div>
-        </article>
-      </section>
+      <section class="elements page__section"></section>
     </main>
     <footer class="footer page__section">
       <p class="footer__copyright">© 2020 Mesto Russia</p>
@@ -101,6 +44,7 @@
     <div id="popup-profile" class="popup">
       <div class="popup__window">
         <button
+          aria-label="закрыть окно"
           type="button"
           id="popup-close-button-profile"
           class="popup__close-button link"
@@ -123,7 +67,7 @@
             class="popup__input"
             maxlength="30"
           />
-          <button type="submit" class="popup__save-button">Сохранить</button>
+          <button aria-label="сохранить" type="submit" class="popup__save-button">Сохранить</button>
         </form>
       </div>
     </div>
@@ -131,6 +75,7 @@
     <div id="popup-element" class="popup">
       <div class="popup__window">
         <button
+          aria-label="закрыть окно"
           type="button"
           id="popup-close-button-element"
           class="popup__close-button link"
@@ -155,11 +100,37 @@
             placeholder="Ссылка на картинку"
             autocomplete="off"
           />
-          <button type="submit" class="popup__save-button">Сохранить</button>
+          <button aria-label="сохранить" type="submit" class="popup__save-button">Сохранить</button>
         </form>
       </div>
     </div>
 
-    <template id="card-template"></template>
+    <div id="popup-image" class="popup popup_image">
+      <div class="popup__window_image">
+        <button
+          aria-label="закрыть окно"
+          type="button"
+          id="popup-close-button-image"
+          class="popup__close-button link"
+        ></button>
+        <img class="popup__full-image" src="" alt="" />
+        <h2 class="popup__image-text"></h2>
+      </div>
+    </div>
+
+    <template id="element-template">
+      <article class="element">
+        <button
+          aria-label="удалить"
+          id="element-trash-button"
+          class="element__trash-button link"
+        ></button>
+        <img id="element-image" class="element__image" />
+        <div class="element__group">
+          <h2 id="element-text" class="element__text"></h2>
+          <button aria-label="поставить лайк" type="button" class="element__button"></button>
+        </div>
+      </article>
+    </template>
   </body>
 </html>
