@@ -20,11 +20,31 @@ const imagePopup = document.querySelector('#popup-image');
 const popupFullImage = imagePopup.querySelector('.popup__full-image');
 const popupImageText = imagePopup.querySelector('.popup__image-text');
 const closeButton = document.querySelectorAll('.popup__close-button');
+const popupClass = document.querySelectorAll('.popup');
 
-// функция закрытия всех попапов
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__save-button',
+  disabledButtonClass: 'popup__save-button_inactive',
+  inputErrorClass: 'popup__input_error',
+  errorClass: 'popup__error'
+};
+
+// функция закрытия всех попапов по нажатию кнопки закрытия
 closeButton.forEach(button => {
   const buttonsPopup = button.closest('.popup'); // нашли родителя с нужным классом
   button.addEventListener('click', () => closePopup(buttonsPopup)); // закрыли попап
+});
+
+// функция закрытия всех попапов по клику по оверлею
+popupClass.forEach(e => {
+  const closingPopup = e.closest('.popup');
+  closingPopup.addEventListener('click', evt => {
+    if (evt.target === closingPopup) {
+      closePopup(closingPopup);
+    }
+  });
 });
 
 // функция открытия попапа
@@ -42,6 +62,13 @@ editPopupButton.addEventListener('click', function () {
   nameInput.value = nameProfile.textContent;
   descriptionInput.value = descriptionProfile.textContent;
   openPopup(editPopup);
+
+  // закрытие по клавише Esc
+  editPopupButton.addEventListener('keydown', evt => {
+    if (evt.key === 'Escape') {
+      closePopup(editPopup);
+    }
+  });
 });
 
 // редактирование профиля
@@ -56,6 +83,13 @@ popupProfileForm.addEventListener('submit', function (event) {
 // открытие окна добавления изображения
 addPopupButton.addEventListener('click', function () {
   openPopup(addPopup);
+
+  // закрытие по клавише Esc
+  addPopupButton.addEventListener('keydown', evt => {
+    if (evt.key === 'Escape') {
+      closePopup(addPopup);
+    }
+  });
 });
 
 //создание сетки изображений
@@ -109,3 +143,5 @@ popupElementForm.addEventListener('submit', function (event) {
   popupElementForm.reset();
   closePopup(addPopup);
 });
+
+enableValidation(validationConfig);

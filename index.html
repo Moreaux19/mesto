@@ -7,7 +7,9 @@
     <link rel="icon" type="image/svg+xml" href="images/logo.svg" />
     <link rel="stylesheet" href="pages/index.css" />
     <script src="./script/cards.js" defer></script>
+    <script src="./script/validate.js" defer></script>
     <script src="./script/index.js" defer></script>
+
     <title>Mesto</title>
   </head>
   <body class="page">
@@ -43,33 +45,35 @@
     </footer>
 
     <div id="popup-profile" class="popup">
-      <div class="popup__window">
+      <div id="popup-window" class="popup__window">
         <button aria-label="закрыть окно" type="button" class="popup__close-button link"></button>
         <h2 class="popup__text">Редактировать профиль</h2>
         <form id="popup-profile-form" name="form" class="popup__form">
           <input
-            required
             id="name-input"
             type="text"
             name="name"
             class="popup__input"
-            maxlength="20"
+            minlength="2"
+            maxlength="40"
           />
+          <span id="name-input-error" class="popup__error"></span>
           <input
-            required
             id="description-input"
             type="text"
             name="description"
             class="popup__input"
-            maxlength="30"
+            minlength="2"
+            maxlength="200"
           />
+          <span id="description-input-error" class="popup__error"></span>
           <button aria-label="сохранить" type="submit" class="popup__save-button">Сохранить</button>
         </form>
       </div>
     </div>
 
     <div id="popup-element" class="popup">
-      <div class="popup__window">
+      <div id="popup-window" class="popup__window">
         <button aria-label="закрыть окно" type="button" class="popup__close-button link"></button>
         <h2 class="popup__text">Новое место</h2>
         <form id="popup-element-form" name="form" class="popup__form">
@@ -81,7 +85,10 @@
             class="popup__input"
             placeholder="Название"
             autocomplete="off"
+            minlength="2"
+            maxlength="30"
           />
+          <span id="image-name-input-error" class="popup__error"></span>
           <input
             required
             id="image-url-input"
@@ -91,6 +98,7 @@
             placeholder="Ссылка на картинку"
             autocomplete="off"
           />
+          <span id="image-url-input-error" class="popup__error"></span>
           <button aria-label="сохранить" type="submit" class="popup__save-button">Сохранить</button>
         </form>
       </div>
