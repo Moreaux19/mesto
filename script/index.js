@@ -1,3 +1,5 @@
+import Card from './Card.js';
+
 const editPopupButton = document.querySelector('.profile__edit-button');
 const nameProfile = document.querySelector('.profile__name');
 const descriptionProfile = document.querySelector('.profile__description');
@@ -62,7 +64,6 @@ function escapeButtonClose(evt) {
 // функция закрытия попапа по клику на оверлей
 function overlayZoneClose(evt) {
   const popup = evt.target;
-  console.log(popup);
   if (popup === evt.currentTarget) {
     closePopup(popup);
   }
@@ -125,8 +126,14 @@ function createElement(value) {
 // функция передачи сетки изображений в код
 function renderElement(data, container) {
   const newElement = createElement(data);
-  container.prepend(newElement);
+  const card = new Card(data);
+  container.prepend(card.getView());
 }
+
+// function renderElement(data, container) {
+//   const newElement = createElement(data);
+//   container.prepend(newElement);
+// }
 
 // загрузка массива
 initialCards.forEach(function (item) {
