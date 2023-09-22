@@ -1,4 +1,5 @@
 import Card from './Card.js';
+import FormValidator from './FormValidator.js';
 import { openPopup, closePopup } from './utils.js';
 
 // функция закрытия всех попапов по нажатию кнопки закрытия
@@ -28,43 +29,13 @@ addPopupButton.addEventListener('click', function () {
   openPopup(addPopup);
 });
 
-// создание сетки изображений
-// function createElement(value) {
-//   const newElement = element.cloneNode(true);
-//   const text = newElement.querySelector('#element-text');
-//   text.textContent = value.name;
-//   const image = newElement.querySelector('#element-image');
-//   image.src = value.link;
-//   image.alt = `Изображение: ${value.name}`;
-
-//   // // удаление изображения
-//   // const deleteElementButton = newElement.querySelector('.element__trash-button');
-//   // deleteElementButton.addEventListener('click', function () {
-//   //   newElement.remove();
-//   // });
-
-//   // // кнопка лайка
-//   // const likeElementButton = newElement.querySelector('.element__button');
-//   // likeElementButton.addEventListener('click', function () {
-//   //   likeElementButton.classList.toggle('element__button_active');
-//   // });
-
-//   // открытие изображения
-//   image.addEventListener('click', function () {
-//     openPopup(imagePopup);
-
-//     popupFullImage.src = image.src;
-//     popupFullImage.alt = image.alt;
-//     popupImageText.textContent = text.textContent;
-//   });
-
-//   return newElement;
-// }
-
 // функция передачи сетки изображений в код
 function renderElement(data, container) {
-  // const newElement = createElement(data);
-  const card = new Card(data);
+  const cardTemplate = document
+    .querySelector('#element-template')
+    .content.querySelector('.element')
+    .cloneNode(true);
+  const card = new Card(data, cardTemplate);
   container.prepend(card.getView());
 }
 
@@ -81,4 +52,9 @@ popupElementForm.addEventListener('submit', function (event) {
   closePopup(addPopup);
 });
 
-enableValidation(validationConfig);
+const validateCard = config => {
+  const card = new FormValidator(config);
+  card.enableValidation();
+};
+
+validateCard(validationConfig);

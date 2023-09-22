@@ -1,19 +1,10 @@
-import { openPopup, closePopup } from './utils.js';
+import { openPopup } from './utils.js';
 // класс с функциями карточки(удаление, лайк)
 class Card {
-  constructor(data) {
+  constructor(data, getTemplate) {
     this._name = data.name;
     this._link = data.link;
-  }
-
-  // выбор класса шаблона для фотокарточки
-  _getTemplate() {
-    const cardTemplate = document
-      .querySelector('#element-template')
-      .content.querySelector('.element')
-      .cloneNode(true);
-
-    return cardTemplate;
+    this.getTemplate = getTemplate;
   }
 
   // выбор названия и ссылки изображения из массива
@@ -62,7 +53,7 @@ class Card {
   }
 
   getView() {
-    this._newCard = this._getTemplate();
+    this._newCard = this.getTemplate;
     this._setData();
     this._setListeners();
     return this._newCard;
