@@ -29,13 +29,13 @@ addPopupButton.addEventListener('click', function () {
   openPopup(addPopup);
 });
 
+const cardClassCreate = data => {
+  return new Card(data);
+};
+
 // функция передачи сетки изображений в код
 function renderElement(data, container) {
-  const cardTemplate = document
-    .querySelector('#element-template')
-    .content.querySelector('.element')
-    .cloneNode(true);
-  const card = new Card(data, cardTemplate);
+  const card = cardClassCreate(data);
   container.prepend(card.getView());
 }
 
@@ -52,9 +52,11 @@ popupElementForm.addEventListener('submit', function (event) {
   closePopup(addPopup);
 });
 
-const validateCard = config => {
-  const card = new FormValidator(config);
+const validateCard = (config, formEl) => {
+  // переменная с массивом форм
+  const forms = Array.from(document.querySelectorAll(formEl));
+  const card = new FormValidator(config, forms);
   card.enableValidation();
 };
 
-validateCard(validationConfig);
+validateCard(validationConfig, validationConfig.formSelector);
