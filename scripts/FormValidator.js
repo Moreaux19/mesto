@@ -3,7 +3,6 @@ class FormValidator {
   constructor(config, formSelector) {
     this._config = config;
     this._formSelector = formSelector;
-    // this._formSelector = config.formSelector;
     this._inputSelector = config.inputSelector;
     this._submitButtonSelector = config.submitButtonSelector;
     this._disabledButtonClass = config.disabledButtonClass;
@@ -84,20 +83,8 @@ class FormValidator {
   }
 
   enableValidation() {
-    this._formSelector.forEach(form => {
-      this._setEventListeners(form);
-    });
-    // this._setEventListeners(this._formSelector);
+    this._setEventListeners(this._formSelector);
   }
-
-  // enableValidation() {
-  //   // переменная с массивом форм
-  //   const forms = Array.from(document.querySelectorAll(this._formSelector));
-
-  //   forms.forEach(form => {
-  //     this._setEventListeners(form);
-  //   });
-  // }
 }
 
 export default FormValidator;

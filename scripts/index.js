@@ -52,11 +52,15 @@ popupElementForm.addEventListener('submit', function (event) {
   closePopup(addPopup);
 });
 
-const validateCard = (config, formEl) => {
+const validateCardCreate = (config, form) => {
   // переменная с массивом форм
-  const forms = Array.from(document.querySelectorAll(formEl));
-  const card = new FormValidator(config, forms);
+  return new FormValidator(config, form);
+};
+
+const validateCard = (config, form) => {
+  const card = validateCardCreate(config, form);
   card.enableValidation();
 };
 
-validateCard(validationConfig, validationConfig.formSelector);
+validateCard(validationConfig, popupProfileForm);
+validateCard(validationConfig, popupElementForm);
