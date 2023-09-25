@@ -29,13 +29,13 @@ addPopupButton.addEventListener('click', function () {
   openPopup(addPopup);
 });
 
-const cardClassCreate = data => {
-  return new Card(data);
+const cardClassCreate = (data, templateSelector) => {
+  return new Card(data, templateSelector);
 };
 
 // функция передачи сетки изображений в код
 function renderElement(data, container) {
-  const card = cardClassCreate(data);
+  const card = cardClassCreate(data, '#element-template');
   container.prepend(card.getView());
 }
 

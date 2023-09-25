@@ -1,15 +1,16 @@
 import { openPopup } from './utils.js';
 // класс с функциями карточки(удаление, лайк)
 class Card {
-  constructor(data) {
+  constructor(data, templateSelector) {
     this._name = data.name;
     this._link = data.link;
+    this._templateSelector = templateSelector;
   }
 
   // выбор класса шаблона для фотокарточки
   _getTemplate() {
     const cardTemplate = document
-      .querySelector('#element-template')
+      .querySelector(this._templateSelector)
       .content.querySelector('.element')
       .cloneNode(true);
     return cardTemplate;
