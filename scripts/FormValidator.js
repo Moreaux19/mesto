@@ -1,20 +1,20 @@
 // класс с валидацией
 class FormValidator {
-  constructor(config, formSelector) {
+  constructor(config, formElement) {
     this._config = config;
-    this._formSelector = formSelector;
+    this._formElement = formElement;
     this._inputSelector = config.inputSelector;
     this._submitButtonSelector = config.submitButtonSelector;
     this._disabledButtonClass = config.disabledButtonClass;
     this._inputErrorClass = config.inputErrorClass;
     this._errorClass = config.errorClass;
-    this._inputs = Array.from(this._formSelector.querySelectorAll(this._inputSelector));
-    this._button = this._formSelector.querySelector(this._submitButtonSelector);
+    this._inputs = Array.from(this._formElement.querySelectorAll(this._inputSelector));
+    this._button = this._formElement.querySelector(this._submitButtonSelector);
   }
 
   // спрятать текст ошибки
   _hideInputError(input) {
-    const span = this._formSelector.querySelector(`#${input.id}-error`);
+    const span = this._formElement.querySelector(`#${input.id}-error`);
     span.textContent = '';
     input.classList.remove(this._inputErrorClass);
   }
@@ -22,7 +22,7 @@ class FormValidator {
   // показать текст ошибки
   _showInputError(input) {
     input.classList.add(this._inputErrorClass);
-    const span = this._formSelector.querySelector(`#${input.id}-error`);
+    const span = this._formElement.querySelector(`#${input.id}-error`);
     span.textContent = input.validationMessage;
     span.classList.add(this._errorClass);
   }
@@ -67,7 +67,7 @@ class FormValidator {
   // функция поиска всех инпутов внутри формы
   _setEventListeners() {
     this._toggleButtonState();
-    this._formSelector.addEventListener('reset', () => {
+    this._formElement.addEventListener('reset', () => {
       this._deactivateButton();
     });
 
