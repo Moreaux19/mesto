@@ -1,61 +1,82 @@
 import Card from './Card.js';
 import FormValidator from './FormValidator.js';
-import { openPopup, closePopup } from './utils.js';
+import Section from './Section.js';
+import PopupWithImage from './PopupWithImage.js';
+import PopupWithForm from './PopupWithForm.js';
+import UserInfo from './UserInfo.js';
 
-// функция закрытия всех попапов по нажатию кнопки закрытия
-closeButton.forEach(button => {
-  const buttonsPopup = button.closest('.popup'); // нашли родителя с нужным классом
-  button.addEventListener('click', () => closePopup(buttonsPopup)); // закрыли попап
-});
-
-// открытие окна редактирования профиля
-editPopupButton.addEventListener('click', function () {
-  nameInput.value = nameProfile.textContent;
-  descriptionInput.value = descriptionProfile.textContent;
-  openPopup(editPopup);
-});
-
-// редактирование профиля
-popupProfileForm.addEventListener('submit', function (event) {
-  event.preventDefault();
-
-  nameProfile.textContent = nameInput.value;
-  descriptionProfile.textContent = descriptionInput.value;
-  closePopup(editPopup);
-});
-
-// открытие окна добавления изображения
-addPopupButton.addEventListener('click', function () {
-  openPopup(addPopup);
-});
-
-const cardClassCreate = (data, templateSelector) => {
-  return new Card(data, templateSelector);
+const sectionClassCreate = ({ items, renderer }, containerSelector) => {
+  return new Section({ items, renderer }, containerSelector);
 };
 
-// функция передачи сетки изображений в код
-function renderElement(data, container) {
-  const card = cardClassCreate(data, '#element-template');
-  container.prepend(card.getView());
-}
+const cardClassCreate = (data, templateSelector, handleCardClick) => {
+  return new Card(data, templateSelector, handleCardClick);
+};
 
-// загрузка массива
-initialCards.forEach(function (item) {
-  renderElement(item, elements);
-});
+const popupFullImageClassCreate = popupSelector => {
+  return new PopupWithImage(popupSelector);
+};
 
-// добавление картинки
-popupElementForm.addEventListener('submit', function (event) {
-  event.preventDefault();
-  renderElement({ name: imageNameInput.value, link: imageUrlInput.value }, elements);
-  popupElementForm.reset();
-  closePopup(addPopup);
-});
+const popupWithFormClassCreate = ({ popupSelector, submitForm }) => {
+  return new PopupWithForm({ popupSelector, submitForm });
+};
 
 const validateFormCreate = (config, form) => {
-  // переменная с массивом форм
   return new FormValidator(config, form);
 };
+
+const userInfoClass = new UserInfo({
+  profileName: nameProfile,
+  profileDescription: descriptionProfile
+});
+
+const popupWithImage = () => {
+  const popupFullImage = popupFullImageClassCreate(imagePopup);
+  return popupFullImage.open();
+};
+
+const sectionClass = sectionClassCreate(
+  {
+    items: initialCards,
+    renderer: item => {
+      sectionClass.addItems(cardClassCreate(item, '#element-template', popupWithImage).getView());
+    }
+  },
+  elements
+);
+sectionClass.renderItems();
+
+const popupAddClass = popupWithFormClassCreate({
+  popupSelector: addPopup,
+  submitForm: () => {
+    const data = { name: imageNameInput.value, link: imageUrlInput.value };
+    const card = cardClassCreate(data, '#element-template', popupWithImage);
+    sectionClass.addItems(card);
+    popupAddClass.close();
+  }
+});
+
+addPopupButton.addEventListener('click', () => {
+  popupAddClass.open();
+});
+popupAddClass.setEventListeners();
+
+const popupEditClass = new PopupWithForm({
+  popupSelector: editPopup,
+  submitForm: el => {
+    userInfoClass.setUserInfo(el.name, el.description);
+    popupEditClass.close();
+  }
+});
+
+const openEditPopup = () => {
+  const userElement = userInfoClass.getUserInfo();
+  nameInput.value = userElement.name;
+  descriptionInput.value = userElement.description;
+  popupEditClass.open();
+};
+editPopupButton.addEventListener('click', openEditPopup);
+popupEditClass.setEventListeners();
 
 const validateForm = (config, form) => {
   const card = validateFormCreate(config, form);

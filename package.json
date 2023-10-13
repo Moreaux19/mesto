@@ -1,0 +1,11 @@
+{
+  "name": "mesto",
+  "version": "1.0.0",
+  "description": "Страница сайта Mesto создана, чтобы пользователи могли делиться друг с другом фотографиями мест, которые они посетили. Пользователь может редактировать свой профиль, имя и род деятельности.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eugene Basargin",
+  "license": "ISC"
+}

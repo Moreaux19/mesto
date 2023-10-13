@@ -1,10 +1,9 @@
-import { openPopup } from './utils.js';
-// класс с функциями карточки(удаление, лайк)
 class Card {
-  constructor(data, templateSelector) {
+  constructor(data, templateSelector, handleCardClick) {
     this._name = data.name;
     this._link = data.link;
     this._templateSelector = templateSelector;
+    this._handleCardClick = handleCardClick;
   }
 
   // выбор класса шаблона для фотокарточки
@@ -36,28 +35,24 @@ class Card {
     const likeButton = this._newCard.querySelector('.element__button');
     likeButton.classList.toggle('element__button_active');
   }
+
+  _popupImageOpen() {
+    this._handleCardClick(this._link, this._name);
+  }
+
   // все слушатели
   _setListeners() {
     // удаление изображения
     const deleteButton = this._newCard.querySelector('.element__trash-button');
     deleteButton.addEventListener('click', this._handleDeleteButton.bind(this));
-
     // кнопка лайка
     const likeButton = this._newCard.querySelector('.element__button');
     likeButton.addEventListener('click', this._handleLikeButton.bind(this));
 
     // открытие изображения
-    const image = this._newCard.querySelector('#element-image');
-    const imagePopup = document.querySelector('#popup-image');
-    const popupFullImage = imagePopup.querySelector('.popup__full-image');
-    const popupImageText = imagePopup.querySelector('.popup__image-text');
-    const text = this._newCard.querySelector('#element-text');
-    image.addEventListener('click', function () {
-      openPopup(imagePopup);
-
-      popupFullImage.src = image.src;
-      popupFullImage.alt = image.alt;
-      popupImageText.textContent = text.textContent;
+    this.image = this._newCard.querySelector('#element-image');
+    this.image.addEventListener('click', () => {
+      this._popupImageOpen();
     });
   }
 

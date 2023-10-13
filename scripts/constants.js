@@ -16,6 +16,8 @@ const template = document.querySelector('#element-template').content;
 const elements = document.querySelector('.elements');
 const element = template.querySelector('.element');
 
+const image = document.querySelector('#element-image');
+const text = document.querySelector('#element-text');
 const imagePopup = document.querySelector('#popup-image');
 const popupFullImage = imagePopup.querySelector('.popup__full-image');
 const popupImageText = imagePopup.querySelector('.popup__image-text');
