@@ -5,52 +5,33 @@ import PopupWithImage from './PopupWithImage.js';
 import PopupWithForm from './PopupWithForm.js';
 import UserInfo from './UserInfo.js';
 
-const sectionClassCreate = ({ items, renderer }, containerSelector) => {
-  return new Section({ items, renderer }, containerSelector);
-};
-
-const cardClassCreate = (data, templateSelector, handleCardClick) => {
-  return new Card(data, templateSelector, handleCardClick);
-};
-
-const popupFullImageClassCreate = popupSelector => {
-  return new PopupWithImage(popupSelector);
-};
-
-const popupWithFormClassCreate = ({ popupSelector, submitForm }) => {
-  return new PopupWithForm({ popupSelector, submitForm });
-};
-
-const validateFormCreate = (config, form) => {
-  return new FormValidator(config, form);
-};
-
 const userInfoClass = new UserInfo({
-  profileName: nameProfile,
-  profileDescription: descriptionProfile
+  profileName: '.profile__name',
+  profileDescription: '.profile__description'
 });
 
 const popupWithImage = () => {
-  const popupFullImage = popupFullImageClassCreate(imagePopup);
+  const popupFullImage = new PopupWithImage('#popup-image');
+  popupFullImage.setEventListeners();
   return popupFullImage.open();
 };
 
-const sectionClass = sectionClassCreate(
+const sectionClass = new Section(
   {
     items: initialCards,
     renderer: item => {
-      sectionClass.addItems(cardClassCreate(item, '#element-template', popupWithImage).getView());
+      sectionClass.addItems(new Card(item, '#element-template', popupWithImage).getView());
     }
   },
   elements
 );
 sectionClass.renderItems();
 
-const popupAddClass = popupWithFormClassCreate({
-  popupSelector: addPopup,
+const popupAddClass = new PopupWithForm({
+  popupSelector: '#popup-element',
   submitForm: () => {
     const data = { name: imageNameInput.value, link: imageUrlInput.value };
-    const card = cardClassCreate(data, '#element-template', popupWithImage);
+    const card = new Card(data, '#element-template', '#popup-image').getView();
     sectionClass.addItems(card);
     popupAddClass.close();
   }
@@ -62,7 +43,7 @@ addPopupButton.addEventListener('click', () => {
 popupAddClass.setEventListeners();
 
 const popupEditClass = new PopupWithForm({
-  popupSelector: editPopup,
+  popupSelector: '#popup-profile',
   submitForm: el => {
     userInfoClass.setUserInfo(el.name, el.description);
     popupEditClass.close();
@@ -79,7 +60,7 @@ editPopupButton.addEventListener('click', openEditPopup);
 popupEditClass.setEventListeners();
 
 const validateForm = (config, form) => {
-  const card = validateFormCreate(config, form);
+  const card = new FormValidator(config, form);
   card.enableValidation();
 };
 
