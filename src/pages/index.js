@@ -26,39 +26,39 @@ const userInfo = new UserInfo({
 
 const popupWithImage = new PopupWithImage('#popup-image');
 popupWithImage.setEventListeners();
-const popupFullImageOpen = (name, link) => {
+const openImagePopup = (name, link) => {
   popupWithImage.open(name, link);
 };
 
-const sectionClass = new Section(
+const cardsSection = new Section(
   {
     items: initialCards,
     renderer: item => {
-      sectionClass.addItem(cardCreate(item));
+      cardsSection.addItem(createCard(item));
     }
   },
   elements
 );
 
-const popupAddClass = new PopupWithForm({
+const popupAddCard = new PopupWithForm({
   popupSelector: '#popup-element',
   submitForm: formData => {
     const data = { name: formData[imageNameInput.name], link: formData[imageUrlInput.name] };
-    sectionClass.addItem(cardCreate(data));
-    popupAddClass.close();
+    cardsSection.addItem(createCard(data));
+    popupAddCard.close();
   }
 });
 
-const popupEditClass = new PopupWithForm({
+const popupEditProfile = new PopupWithForm({
   popupSelector: '#popup-profile',
   submitForm: formData => {
     userInfo.setUserInfo(formData.name, formData.description);
-    popupEditClass.close();
+    popupEditProfile.close();
   }
 });
 
-const cardCreate = el => {
-  const card = new Card(el, '#element-template', popupFullImageOpen);
+const createCard = el => {
+  const card = new Card(el, '#element-template', openImagePopup);
   return card.getView();
 };
 
@@ -66,7 +66,7 @@ const openEditPopup = () => {
   const userElement = userInfo.getUserInfo();
   nameInput.value = userElement.name;
   descriptionInput.value = userElement.description;
-  popupEditClass.open();
+  popupEditProfile.open();
 };
 
 const validateForm = (config, form) => {
@@ -77,14 +77,14 @@ const validateForm = (config, form) => {
 validateForm(validationConfig, popupProfileForm);
 validateForm(validationConfig, popupAddCardForm);
 
-sectionClass.renderItems();
+cardsSection.renderItems();
 
 addPopupButton.addEventListener('click', () => {
-  popupAddClass.open();
+  popupAddCard.open();
 });
 
 editPopupButton.addEventListener('click', openEditPopup);
 
-popupAddClass.setEventListeners();
+popupAddCard.setEventListeners();
 
-popupEditClass.setEventListeners();
+popupEditProfile.setEventListeners();

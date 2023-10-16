@@ -41,7 +41,7 @@ class Card {
     this._likeButton.classList.toggle('element__button_active');
   }
 
-  _popupImageOpen() {
+  _openImagePopup() {
     this._handleCardClick(this._name, this._link);
   }
 
@@ -54,7 +54,7 @@ class Card {
 
     // открытие изображения
     this._image.addEventListener('click', () => {
-      this._popupImageOpen();
+      this._openImagePopup();
     });
   }
 
