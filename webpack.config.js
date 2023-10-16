@@ -6,7 +6,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // подклю�
 module.exports = {
   mode: 'development',
   entry: {
-    main: './src/index.js'
+    main: './src/pages/index.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -14,7 +14,6 @@ module.exports = {
     publicPath: ''
   },
   devtool: 'source-map',
-  mode: "development",
   devServer: {
     static: path.resolve(__dirname, './dist'), // путь, куда "смотрит" режим разработчика
     compress: true, // это ускорит загрузку в режиме разработки

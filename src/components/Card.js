@@ -15,13 +15,19 @@ class Card {
     return cardTemplate;
   }
 
+  // находим все элементы в одном свойстве
+  _getElements() {
+    this._image = this._newCard.querySelector('#element-image');
+    this._text = this._newCard.querySelector('#element-text');
+    this._likeButton = this._newCard.querySelector('.element__button');
+    this._deleteButton = this._newCard.querySelector('.element__trash-button');
+  }
+
   // выбор названия и ссылки изображения из массива
   _setData() {
-    const text = this._newCard.querySelector('#element-text');
-    text.textContent = this._name;
-    const image = this._newCard.querySelector('#element-image');
-    image.src = this._link;
-    image.alt = `Изображение: ${this._name}`;
+    this._text.textContent = this._name;
+    this._image.src = this._link;
+    this._image.alt = `Изображение: ${this._name}`;
   }
 
   // слушатель удаления изображения
@@ -32,32 +38,30 @@ class Card {
 
   // слушатель кнопки лайка
   _handleLikeButton() {
-    const likeButton = this._newCard.querySelector('.element__button');
-    likeButton.classList.toggle('element__button_active');
+    this._likeButton.classList.toggle('element__button_active');
   }
 
   _popupImageOpen() {
-    this._handleCardClick(this._link, this._name);
+    this._handleCardClick(this._name, this._link);
   }
 
   // все слушатели
   _setListeners() {
     // удаление изображения
-    const deleteButton = this._newCard.querySelector('.element__trash-button');
-    deleteButton.addEventListener('click', this._handleDeleteButton.bind(this));
+    this._deleteButton.addEventListener('click', this._handleDeleteButton.bind(this));
     // кнопка лайка
-    const likeButton = this._newCard.querySelector('.element__button');
-    likeButton.addEventListener('click', this._handleLikeButton.bind(this));
+    this._likeButton.addEventListener('click', this._handleLikeButton.bind(this));
 
     // открытие изображения
-    this.image = this._newCard.querySelector('#element-image');
-    this.image.addEventListener('click', () => {
+    this._image.addEventListener('click', () => {
       this._popupImageOpen();
     });
   }
 
   getView() {
     this._newCard = this._getTemplate();
+    this._getElements();
+    // this._image = this._newCard.querySelector('#element-image');
     this._setData();
     this._setListeners();
     return this._newCard;

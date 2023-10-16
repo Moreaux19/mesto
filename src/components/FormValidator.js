@@ -3,11 +3,11 @@ class FormValidator {
   constructor(config, formElement) {
     this._config = config;
     this._formElement = formElement;
-    this._inputSelector = config.inputSelector;
-    this._submitButtonSelector = config.submitButtonSelector;
-    this._disabledButtonClass = config.disabledButtonClass;
-    this._inputErrorClass = config.inputErrorClass;
-    this._errorClass = config.errorClass;
+    this._inputSelector = this._config.inputSelector;
+    this._submitButtonSelector = this._config.submitButtonSelector;
+    this._disabledButtonClass = this._config.disabledButtonClass;
+    this._inputErrorClass = this._config.inputErrorClass;
+    this._errorClass = this._config.errorClass;
     this._inputs = Array.from(this._formElement.querySelectorAll(this._inputSelector));
     this._button = this._formElement.querySelector(this._submitButtonSelector);
   }
@@ -57,10 +57,10 @@ class FormValidator {
 
   // функция активации кнопки при валидации
   _toggleButtonState() {
-    if (this._hasInvalidValue(this._inputs)) {
-      this._deactivateButton(this._button);
+    if (this._hasInvalidValue()) {
+      this._deactivateButton();
     } else {
-      this._activateButton(this._button);
+      this._activateButton();
     }
   }
 
