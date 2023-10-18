@@ -725,6 +725,15 @@ _utils_constants_js__WEBPACK_IMPORTED_MODULE_6__.addPopupButton.addEventListener
 _utils_constants_js__WEBPACK_IMPORTED_MODULE_6__.editPopupButton.addEventListener('click', openEditPopup);
 popupAddCard.setEventListeners();
 popupEditProfile.setEventListeners();
+fetch('https://mesto.nomoreparties.co/v1/cohort-77/cards', {
+  headers: {
+    authorization: '6509c90e-d66c-4b62-a862-55254e2f046d'
+  }
+}).then(function (res) {
+  return res.json();
+}).then(function (result) {
+  console.log(result);
+});
 })();
 
 /******/ })()
