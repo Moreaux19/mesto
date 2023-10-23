@@ -10,7 +10,7 @@ export const imageNameInput = popupAddCardForm.querySelector('#image-name-input'
 export const imageUrlInput = popupAddCardForm.querySelector('#image-url-input');
 export const elements = document.querySelector('.elements');
 export const profileAvatar = document.querySelector('#profile-avatar');
-export const avatarPopup = document.querySelector('.popup__edit-avatar');
+export const avatarPopup = document.querySelector('#popup-edit-avatar');
 export const avatarForm = avatarPopup.querySelector('#avatar-form');
 
 export const validationConfig = {

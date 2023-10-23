@@ -57,7 +57,7 @@ const popupEditProfile = new PopupWithForm({
 });
 
 const popupEditAvatar = new PopupWithForm({
-  popupSelector: '.popup__edit-avatar',
+  popupSelector: '#popup-edit-avatar',
   submitForm: submitAvatarForm
 });
 
