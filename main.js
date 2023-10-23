@@ -782,7 +782,7 @@ var imageNameInput = popupAddCardForm.querySelector('#image-name-input');
 var imageUrlInput = popupAddCardForm.querySelector('#image-url-input');
 var elements = document.querySelector('.elements');
 var profileAvatar = document.querySelector('#profile-avatar');
-var avatarPopup = document.querySelector('.popup__edit-avatar');
+var avatarPopup = document.querySelector('#popup-edit-avatar');
 var avatarForm = avatarPopup.querySelector('#avatar-form');
 var validationConfig = {
   formSelector: '.popup__form',
@@ -934,7 +934,7 @@ var popupEditProfile = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE
   submitForm: submitEditForm
 });
 var popupEditAvatar = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-  popupSelector: '.popup__edit-avatar',
+  popupSelector: '#popup-edit-avatar',
   submitForm: submitAvatarForm
 });
 var popupWithImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_3__["default"]('#popup-image');
