@@ -89,10 +89,10 @@ var Api = /*#__PURE__*/function () {
     }
   }, {
     key: "setLikes",
-    value: function setLikes(id, isLiked) {
+    value: function setLikes(cardId, isLiked) {
       //поменять местами put и delete?
       var method = !isLiked ? 'PUT' : 'DELETE';
-      var url = "".concat(this._url, "/cards/").concat(id, "/likes");
+      var url = "".concat(this._url, "/cards/").concat(cardId, "/likes");
       return fetch(url, {
         method: method,
         headers: this._headers
@@ -144,7 +144,8 @@ var Card = /*#__PURE__*/function () {
     this._id = data.id;
     this._likes = data.likes;
     this._isLiked = data.isLiked;
-    this._ownerId = data.ownerId;
+    this._owner = data.owner;
+    // this._ownerId = this._owner._id;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
     this._handleLikeClick = handleLikeClick;
@@ -157,10 +158,10 @@ var Card = /*#__PURE__*/function () {
     key: "_getTemplate",
     value: function _getTemplate() {
       var cardTemplate = document.querySelector(this._templateSelector).content.querySelector('.element').cloneNode(true);
-      this._deleteButtonEl = cardTemplate.querySelector('.element__trash-button');
-      if (this._ownerId !== this._currentUserId) {
-        this._deleteButtonEl.style.display = 'none';
-      }
+      // this._deleteButtonEl = cardTemplate.querySelector('.element__trash-button');
+      // if (this._ownerId !== this._currentUserId) {
+      //   this._deleteButtonEl.style.display = 'none';
+      // }
       return cardTemplate;
     }
 
@@ -188,7 +189,6 @@ var Card = /*#__PURE__*/function () {
   }, {
     key: "handleDeleteButton",
     value: function handleDeleteButton() {
-      // проверить работает ли без
       this._newCard.remove();
       this._newCard = null;
     }
@@ -453,70 +453,36 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-// import Popup from './Popup.js';
-
-// class PopupDelete extends Popup {
-//   constructor(popupSelector) {
-//     super(popupSelector);
-//     this._deleteButton = this._popup.querySelector('.popup__delete-button');
-//   }
-
-//   open(submitForm) {
-//     this._submitHandler = submitForm;
-//     super.open();
-//   }
-
-//   setEventListeners() {
-//     super.setEventListeners();
-//     this._deleteButton.addEventListener('click', () => {
-//       Promise.resolve(this._submitHandler())
-//         .then(() => {
-//           super.close();
-//         })
-//         .catch(error => {
-//           console.log(error);
-//         });
-//     });
-//   }
-// }
-
-// export default PopupDelete;
-
 
 var PopupDelete = /*#__PURE__*/function (_Popup) {
   _inherits(PopupDelete, _Popup);
   var _super = _createSuper(PopupDelete);
-  function PopupDelete(popupSelector, submitForm) {
+  function PopupDelete(popupSelector) {
     var _this;
     _classCallCheck(this, PopupDelete);
     _this = _super.call(this, popupSelector);
-    _this._submitForm = submitForm;
-    _this._form = _this._popup.querySelector('.popup__form');
-    _this._deleteButton = _this._form.querySelector('.popup__delete-button');
+    _this._deleteButton = _this._popup.querySelector('.popup__delete-button');
     return _this;
   }
   _createClass(PopupDelete, [{
+    key: "open",
+    value: function open(submitForm) {
+      this._submitHandler = submitForm;
+      console.log(submitForm);
+      _get(_getPrototypeOf(PopupDelete.prototype), "open", this).call(this);
+    }
+  }, {
     key: "setEventListeners",
     value: function setEventListeners() {
       var _this2 = this;
       _get(_getPrototypeOf(PopupDelete.prototype), "setEventListeners", this).call(this);
-      this._form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        _this2._deleteButton.textContent = "".concat(_this2._deleteButton.textContent, "...");
-        _this2._submitForm({
-          card: _this2._card,
-          id: _this2._id
+      this._deleteButton.addEventListener('click', function () {
+        Promise.resolve(_this2._submitHandler()).then(function () {
+          _get(_getPrototypeOf(PopupDelete.prototype), "close", _this2).call(_this2);
+        }).catch(function (error) {
+          console.log(error);
         });
       });
-    }
-  }, {
-    key: "open",
-    value: function open(_ref) {
-      var card = _ref.card,
-        id = _ref.cardID;
-      _get(_getPrototypeOf(PopupDelete.prototype), "open", this).call(this);
-      this._card = card;
-      this._cardID = id;
     }
   }]);
   return PopupDelete;
@@ -972,22 +938,7 @@ var popupEditAvatar = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_
   submitForm: submitAvatarForm
 });
 var popupWithImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_3__["default"]('#popup-image');
-
-// const popupDelete = new PopupDelete('.popup__delete-form');
-
-var popupDelete = new _components_PopupDelete_js__WEBPACK_IMPORTED_MODULE_7__["default"]('.popup__delete-form', function (_ref) {
-  var card = _ref.card,
-    id = _ref.cardID;
-  api.deleteCardID(id).then(function () {
-    card.removeCard();
-    deletePopupCard.close();
-  }).catch(function (error) {
-    return console.error("\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u043F\u043E\u043F\u044B\u0442\u043A\u0435 \u0443\u0434\u0430\u043B\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0443 ".concat(error));
-  }).finally(function () {
-    return deletePopupCard.submitBtn.textContent = 'да';
-  });
-});
-deletePopupCard.setEventListeners();
+var popupDelete = new _components_PopupDelete_js__WEBPACK_IMPORTED_MODULE_7__["default"]('.popup__delete-form');
 
 //функция создания карточки
 function createCard(data) {
@@ -1010,7 +961,6 @@ function createCard(data) {
 function submitEditForm(formData) {
   var name = formData['name'];
   var about = formData['description'];
-  console.log(about);
   popupEditProfile.showPreloader();
   api.editProfile(name, about).then(function (res) {
     userInfo.setUserInfo(res);
@@ -1022,7 +972,6 @@ function submitEditForm(formData) {
 
 //функция редактирования аватара
 function submitAvatarForm(inputs) {
-  console.log(inputs);
   var avatarUrl = inputs['avatar-url'];
   popupEditAvatar.showPreloader();
   api.editAvatar(avatarUrl).then(function (data) {
@@ -1089,11 +1038,7 @@ Promise.all([api.getUser().then(function (user) {
   return console.log(err);
 })]);
 Promise.all([api.getAllCards().then(function (cards) {
-  // const { id: userId } = userInfo.getUserInfo();
   cards.reverse().forEach(function (card) {
-    // const isLiked = card.likes.some(user => {
-    //   user._id === userId;
-    // });
     var cardEl = createCard(card);
     cardsSection.addItem(cardEl);
   });
