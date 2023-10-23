@@ -3,9 +3,12 @@ import Popup from './Popup.js';
 class PopupWithForm extends Popup {
   constructor({ popupSelector, submitForm }) {
     super(popupSelector);
+
     this._submitForm = submitForm;
     this._form = this._popup.querySelector('.popup__form');
     this._inputList = this._form.querySelectorAll('.popup__input');
+    this._saveButton = this._form.querySelector('.popup__save-button');
+    this._button = this._saveButton.textContent;
   }
 
   _getInputValues() {
@@ -16,9 +19,29 @@ class PopupWithForm extends Popup {
     return this._inputValues;
   }
 
+  setInputValues(data) {
+    this._inputList.forEach(input => {
+      if (input.name === 'info') {
+        input.value = data.info;
+      } else {
+        input.value = data[input.name];
+      }
+    });
+  }
+
   close() {
     super.close();
     this._form.reset();
+  }
+
+  showPreloader(isLoading = true) {
+    isLoading
+      ? (this._saveButton.textContent = 'Сохранение...')
+      : (this._saveButton.textContent = this._button);
+  }
+
+  getName() {
+    return this._form.getAttribute('name');
   }
 
   setEventListeners() {

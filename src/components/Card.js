@@ -1,9 +1,24 @@
 class Card {
-  constructor(data, templateSelector, handleCardClick) {
+  constructor(
+    data,
+    templateSelector,
+    handleCardClick,
+    handleLikeClick,
+    handleDeleteClick,
+    currentUserId
+  ) {
     this._name = data.name;
     this._link = data.link;
+    this._id = data.id;
+    this._likes = data.likes;
+    this._isLiked = data.isLiked;
+    this._owner = data.owner;
+    // this._ownerId = this._owner._id;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
+    this._handleLikeClick = handleLikeClick;
+    this._handleDeleteClick = handleDeleteClick;
+    this._currentUserId = currentUserId;
   }
 
   // выбор класса шаблона для фотокарточки
@@ -12,6 +27,10 @@ class Card {
       .querySelector(this._templateSelector)
       .content.querySelector('.element')
       .cloneNode(true);
+    // this._deleteButtonEl = cardTemplate.querySelector('.element__trash-button');
+    // if (this._ownerId !== this._currentUserId) {
+    //   this._deleteButtonEl.style.display = 'none';
+    // }
     return cardTemplate;
   }
 
@@ -21,6 +40,7 @@ class Card {
     this._text = this._newCard.querySelector('#element-text');
     this._likeButton = this._newCard.querySelector('.element__button');
     this._deleteButton = this._newCard.querySelector('.element__trash-button');
+    this._likesNumber = this._newCard.querySelector('.element__likes');
   }
 
   // выбор названия и ссылки изображения из массива
@@ -31,7 +51,7 @@ class Card {
   }
 
   // слушатель удаления изображения
-  _handleDeleteButton() {
+  handleDeleteButton() {
     this._newCard.remove();
     this._newCard = null;
   }
@@ -48,7 +68,7 @@ class Card {
   // все слушатели
   _setListeners() {
     // удаление изображения
-    this._deleteButton.addEventListener('click', this._handleDeleteButton.bind(this));
+    this._deleteButton.addEventListener('click', this.handleDeleteButton.bind(this));
     // кнопка лайка
     this._likeButton.addEventListener('click', this._handleLikeButton.bind(this));
 
@@ -61,7 +81,6 @@ class Card {
   getView() {
     this._newCard = this._getTemplate();
     this._getElements();
-    // this._image = this._newCard.querySelector('#element-image');
     this._setData();
     this._setListeners();
     return this._newCard;

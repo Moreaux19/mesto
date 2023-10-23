@@ -9,6 +9,9 @@ export const popupAddCardForm = addPopup.querySelector('#popup-element-form');
 export const imageNameInput = popupAddCardForm.querySelector('#image-name-input');
 export const imageUrlInput = popupAddCardForm.querySelector('#image-url-input');
 export const elements = document.querySelector('.elements');
+export const profileAvatar = document.querySelector('#profile-avatar');
+export const avatarPopup = document.querySelector('.popup__edit-avatar');
+export const avatarForm = avatarPopup.querySelector('#avatar-form');
 
 export const validationConfig = {
   formSelector: '.popup__form',
@@ -45,3 +48,11 @@ export const initialCards = [
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
 ];
+
+export const optionsApi = {
+  url: 'https://mesto.nomoreparties.co/v1/cohort-77',
+  headers: {
+    authorization: '6509c90e-d66c-4b62-a862-55254e2f046d',
+    'Content-Type': 'application/json'
+  }
+};

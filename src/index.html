@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="images/logo.svg" />
+    <link rel="icon" type="image/svg+xml" href="<%=require('./images/logo.svg')%>" />
     <link rel="stylesheet" href="pages/index.css" />
 
     <title>Mesto</title>
@@ -16,7 +16,7 @@
     <main class="content">
       <section class="profile page__section">
         <div class="profile__info">
-          <div class="profile__avatar"></div>
+          <button id="profile-avatar" class="profile__avatar"></button>
           <div class="profile__text-block">
             <div class="profile__name-block">
               <h1 class="profile__name">Жак-Ив Кусто</h1>
@@ -41,6 +41,7 @@
       <p class="footer__copyright">© 2020 Mesto Russia</p>
     </footer>
 
+    <!--попап редактирования профиля-->
     <div id="popup-profile" class="popup">
       <div class="popup__window">
         <button aria-label="закрыть окно" type="button" class="popup__close-button link"></button>
@@ -71,6 +72,7 @@
       </div>
     </div>
 
+    <!--попап добавления карточки-->
     <div id="popup-element" class="popup">
       <div class="popup__window">
         <button aria-label="закрыть окно" type="button" class="popup__close-button link"></button>
@@ -103,6 +105,7 @@
       </div>
     </div>
 
+    <!--попап фулскрина изображения-->
     <div id="popup-image" class="popup popup_image">
       <div class="popup__window-image">
         <button aria-label="закрыть окно" type="button" class="popup__close-button link"></button>
@@ -111,6 +114,36 @@
       </div>
     </div>
 
+    <!--попап удаления карточки-->
+    <div class="popup">
+      <div class="popup__window popup__delete-form">
+        <button type="button" class="popup__close-button link"></button>
+        <h2 class="popup__text">Вы уверены?</h2>
+        <button type="button" class="popup__delete-button">Да</button>
+      </div>
+    </div>
+
+    <!--попап редактирования аватара-->
+    <div class="popup popup__edit-avatar">
+      <div class="popup__window">
+        <button type="button" class="popup__close-button link"></button>
+        <h2 class="popup__text">Обновить аватар</h2>
+        <form id="avatar-form" name="avatar-form" class="popup__form" novalidate>
+          <input
+            type="url"
+            name="avatar-url"
+            id="avatar-url-input"
+            placeholder="Ссылка на аватар"
+            class="popup__input"
+            required
+          />
+          <span id="avatar-url-input-error" class="popup__error"></span>
+          <button aria-label="сохранить" type="submit" class="popup__save-button">Сохранить</button>
+        </form>
+      </div>
+    </div>
+
+    <!--секция карточек-->
     <template id="element-template">
       <article class="element">
         <button
@@ -123,6 +156,7 @@
           <h2 id="element-text" class="element__text"></h2>
           <button aria-label="поставить лайк" type="button" class="element__button"></button>
         </div>
+        <span class="element__likes"></span>
       </article>
     </template>
   </body>
