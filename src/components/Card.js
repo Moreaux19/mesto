@@ -7,13 +7,12 @@ class Card {
     handleDeleteClick,
     currentUserId
   ) {
+    this._data = data;
     this._name = data.name;
     this._link = data.link;
-    this._id = data.id;
+    this._id = data._id;
     this._likes = data.likes;
-    this._isLiked = data.isLiked;
     this._owner = data.owner;
-    // this._ownerId = this._owner._id;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
     this._handleLikeClick = handleLikeClick;
@@ -27,10 +26,10 @@ class Card {
       .querySelector(this._templateSelector)
       .content.querySelector('.element')
       .cloneNode(true);
-    // this._deleteButtonEl = cardTemplate.querySelector('.element__trash-button');
-    // if (this._ownerId !== this._currentUserId) {
-    //   this._deleteButtonEl.style.display = 'none';
-    // }
+    this._deleteButtonEl = cardTemplate.querySelector('.element__trash-button');
+    if (this._owner._id !== this._currentUserId) {
+      this._deleteButtonEl.style.display = 'none';
+    }
     return cardTemplate;
   }
 
@@ -52,26 +51,52 @@ class Card {
 
   // слушатель удаления изображения
   handleDeleteButton() {
-    this._newCard.remove();
-    this._newCard = null;
+    this._el = this._deleteButton.closest('.element');
+    console.log(this._el);
+    this._el.remove();
+    this._el = null;
   }
 
   // слушатель кнопки лайка
   _handleLikeButton() {
     this._likeButton.classList.toggle('element__button_active');
+    this._handleLikeClick(this.isLiked);
   }
 
   _openImagePopup() {
     this._handleCardClick(this._name, this._link);
   }
 
+  setLikesData(data) {
+    this._data.likes = data.likes;
+    this._updateLike();
+  }
+
+  _updateLike() {
+    this._likesNumber.textContent = this._data.likes.length;
+    if (this.isLiked()) {
+      this._likeButton.classList.add('element__button_active');
+    } else {
+      this._likeButton.classList.remove('element__button_active');
+    }
+  }
+
+  isLiked() {
+    return this._data.likes.some(user => {
+      return user._id === this._currentUserId;
+    });
+  }
+
+  _handleDeleteClick() {
+    this._handleDeleteClick();
+  }
+
   // все слушатели
   _setListeners() {
-    // удаление изображения
-    this._deleteButton.addEventListener('click', this.handleDeleteButton.bind(this));
     // кнопка лайка
     this._likeButton.addEventListener('click', this._handleLikeButton.bind(this));
-
+    // удаление изображения
+    this._deleteButton.addEventListener('click', () => this._handleDeleteClick(this));
     // открытие изображения
     this._image.addEventListener('click', () => {
       this._openImagePopup();
@@ -83,6 +108,7 @@ class Card {
     this._getElements();
     this._setData();
     this._setListeners();
+    this.setLikesData(this._data);
     return this._newCard;
   }
 }

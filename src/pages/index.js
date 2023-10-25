@@ -4,6 +4,7 @@ import Section from '../components/Section.js';
 import PopupWithImage from '../components/PopupWithImage.js';
 import PopupWithForm from '../components/PopupWithForm.js';
 import UserInfo from '../components/UserInfo.js';
+import UserAvatar from '../components/UserAvatar.js';
 import Api from '../components/Api.js';
 import PopupDelete from '../components/PopupDelete.js';
 import './index.css';
@@ -30,21 +31,14 @@ import {
 
 const api = new Api(optionsApi);
 
-const cardsSection = new Section(
-  {
-    items: initialCards,
-    renderer: createCard
-  },
-  elements
-);
+const cardsSection = new Section(createCard, elements);
 
-const userInfo = new UserInfo(
-  {
-    profileNameSelector: '.profile__name',
-    profileDescriptionSelector: '.profile__description'
-  },
-  profileAvatar
-);
+const userInfo = new UserInfo({
+  profileNameSelector: '.profile__name',
+  profileDescriptionSelector: '.profile__description'
+});
+
+const userAvatar = new UserAvatar(profileAvatar);
 
 const popupAddCard = new PopupWithForm({
   popupSelector: '#popup-element',
@@ -63,7 +57,7 @@ const popupEditAvatar = new PopupWithForm({
 
 const popupWithImage = new PopupWithImage('#popup-image');
 
-const popupDelete = new PopupDelete('.popup__delete-form');
+const popupDelete = new PopupDelete('#popup-delete', null);
 
 //функция создания карточки
 function createCard(data) {
@@ -72,20 +66,9 @@ function createCard(data) {
     '#element-template',
     openImagePopup,
     () => {
-      api.setLikes(data.id, data.isLiked);
+      api.setLikes(data._id, card.isLiked());
     },
-    () =>
-      popupDelete.open(() => {
-        api
-          .deleteCard(id)
-          .then(() => {
-            card.handleDeleteButton();
-            popupDelete.close();
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }),
+    handleDeleteFunction,
     userInfo.getUserInfo().id
   );
   return card.getView();
@@ -104,7 +87,8 @@ function submitEditForm(formData) {
     })
     .catch(err => {
       console.log(err);
-    });
+    })
+    .finally(() => popupEditProfile.showPreloader(false));
 }
 
 //функция редактирования аватара
@@ -114,10 +98,11 @@ function submitAvatarForm(inputs) {
   api
     .editAvatar(avatarUrl)
     .then(data => {
-      userInfo.setUserInfo(data);
+      userAvatar.setAvatar(data.avatar);
       popupEditAvatar.close();
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
+    .finally(() => popupEditAvatar.showPreloader(false));
 }
 
 //функция добавления изображения
@@ -132,7 +117,8 @@ function submitAddForm(inputs) {
       cardsSection.addItem(card);
       popupAddCard.close();
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
+    .finally(() => popupEditProfile.showPreloader(false));
 }
 
 //функция открытия изображения
@@ -148,6 +134,20 @@ function openEditPopup() {
   popupEditProfile.open();
 }
 
+//функция удаления попапа
+function handleDeleteFunction(card) {
+  popupDelete.open();
+  popupDelete.submitFunction(() => {
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        card.handleDeleteButton();
+        popupDelete.close();
+      })
+      .catch(err => console.log(err));
+  });
+}
+
 //функция валидации формы
 function validateForm(config, form) {
   const formValidator = new FormValidator(config, form);
@@ -158,7 +158,7 @@ validateForm(validationConfig, popupProfileForm);
 validateForm(validationConfig, popupAddCardForm);
 validateForm(validationConfig, avatarForm);
 
-cardsSection.renderItems();
+cardsSection.renderItems([]);
 
 addPopupButton.addEventListener('click', () => {
   popupAddCard.open();
@@ -180,26 +180,27 @@ popupEditAvatar.setEventListeners();
 
 popupDelete.setEventListeners();
 
-Promise.all([
-  api
-    .getUser()
-    .then(user => {
-      userInfo.setUserInfo(user);
-      const backgroundImage = `url(${user.avatar})`;
-      profileAvatar.computedStyleMap.backgroundImage = backgroundImage;
-    })
-    .catch(err => console.log(err))
-]);
-
-Promise.all([
+Promise.all(
+  [
+    api
+      .getUser()
+      .then(user => {
+        userInfo.setUserInfo(user);
+        userAvatar.setAvatar(user.avatar);
+        const backgroundImage = `url(${user.avatar})`;
+        profileAvatar.computedStyleMap.backgroundImage = backgroundImage;
+      })
+      .catch(err => console.log(err))
+  ],
   api
     .getAllCards()
     .then(cards => {
+      const { id: userId } = userInfo.getUserInfo();
       cards.reverse().forEach(card => {
         const cardEl = createCard(card);
         cardsSection.addItem(cardEl);
       });
-      cardsSection.renderItems();
+      cardsSection.renderItems([]);
     })
     .catch(err => console.log(err))
-]);
+);
