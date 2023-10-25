@@ -139,13 +139,12 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 var Card = /*#__PURE__*/function () {
   function Card(data, templateSelector, handleCardClick, handleLikeClick, handleDeleteClick, currentUserId) {
     _classCallCheck(this, Card);
+    this._data = data;
     this._name = data.name;
     this._link = data.link;
-    this._id = data.id;
+    this._id = data._id;
     this._likes = data.likes;
-    this._isLiked = data.isLiked;
     this._owner = data.owner;
-    // this._ownerId = this._owner._id;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
     this._handleLikeClick = handleLikeClick;
@@ -158,10 +157,10 @@ var Card = /*#__PURE__*/function () {
     key: "_getTemplate",
     value: function _getTemplate() {
       var cardTemplate = document.querySelector(this._templateSelector).content.querySelector('.element').cloneNode(true);
-      // this._deleteButtonEl = cardTemplate.querySelector('.element__trash-button');
-      // if (this._ownerId !== this._currentUserId) {
-      //   this._deleteButtonEl.style.display = 'none';
-      // }
+      this._deleteButtonEl = cardTemplate.querySelector('.element__trash-button');
+      if (this._owner._id !== this._currentUserId) {
+        this._deleteButtonEl.style.display = 'none';
+      }
       return cardTemplate;
     }
 
@@ -189,8 +188,10 @@ var Card = /*#__PURE__*/function () {
   }, {
     key: "handleDeleteButton",
     value: function handleDeleteButton() {
-      this._newCard.remove();
-      this._newCard = null;
+      this._el = this._deleteButton.closest('.element');
+      console.log(this._el);
+      this._el.remove();
+      this._el = null;
     }
 
     // слушатель кнопки лайка
@@ -198,26 +199,57 @@ var Card = /*#__PURE__*/function () {
     key: "_handleLikeButton",
     value: function _handleLikeButton() {
       this._likeButton.classList.toggle('element__button_active');
+      this._handleLikeClick(this.isLiked);
     }
   }, {
     key: "_openImagePopup",
     value: function _openImagePopup() {
       this._handleCardClick(this._name, this._link);
     }
+  }, {
+    key: "setLikesData",
+    value: function setLikesData(data) {
+      this._data.likes = data.likes;
+      this._updateLike();
+    }
+  }, {
+    key: "_updateLike",
+    value: function _updateLike() {
+      this._likesNumber.textContent = this._data.likes.length;
+      if (this.isLiked()) {
+        this._likeButton.classList.add('element__button_active');
+      } else {
+        this._likeButton.classList.remove('element__button_active');
+      }
+    }
+  }, {
+    key: "isLiked",
+    value: function isLiked() {
+      var _this = this;
+      return this._data.likes.some(function (user) {
+        return user._id === _this._currentUserId;
+      });
+    }
+  }, {
+    key: "_handleDeleteClick",
+    value: function _handleDeleteClick() {
+      this._handleDeleteClick();
+    }
 
     // все слушатели
   }, {
     key: "_setListeners",
     value: function _setListeners() {
-      var _this = this;
-      // удаление изображения
-      this._deleteButton.addEventListener('click', this.handleDeleteButton.bind(this));
+      var _this2 = this;
       // кнопка лайка
       this._likeButton.addEventListener('click', this._handleLikeButton.bind(this));
-
+      // удаление изображения
+      this._deleteButton.addEventListener('click', function () {
+        return _this2._handleDeleteClick(_this2);
+      });
       // открытие изображения
       this._image.addEventListener('click', function () {
-        _this._openImagePopup();
+        _this2._openImagePopup();
       });
     }
   }, {
@@ -227,6 +259,7 @@ var Card = /*#__PURE__*/function () {
       this._getElements();
       this._setData();
       this._setListeners();
+      this.setLikesData(this._data);
       return this._newCard;
     }
   }]);
@@ -459,17 +492,18 @@ var PopupDelete = /*#__PURE__*/function (_Popup) {
   var _super = _createSuper(PopupDelete);
   function PopupDelete(popupSelector) {
     var _this;
+    var submitForm = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     _classCallCheck(this, PopupDelete);
     _this = _super.call(this, popupSelector);
-    _this._deleteButton = _this._popup.querySelector('.popup__delete-button');
+    _this._submitForm = submitForm;
+    _this._popupForm = _this._popup.querySelector('.popup__form');
+    _this._deleteButton = _this._popupForm.querySelector('.popup__delete-button');
     return _this;
   }
   _createClass(PopupDelete, [{
-    key: "open",
-    value: function open(submitForm) {
-      this._submitHandler = submitForm;
-      console.log(submitForm);
-      _get(_getPrototypeOf(PopupDelete.prototype), "open", this).call(this);
+    key: "submitFunction",
+    value: function submitFunction(callback) {
+      this._submitForm = callback;
     }
   }, {
     key: "setEventListeners",
@@ -477,11 +511,7 @@ var PopupDelete = /*#__PURE__*/function (_Popup) {
       var _this2 = this;
       _get(_getPrototypeOf(PopupDelete.prototype), "setEventListeners", this).call(this);
       this._deleteButton.addEventListener('click', function () {
-        Promise.resolve(_this2._submitHandler()).then(function () {
-          _get(_getPrototypeOf(PopupDelete.prototype), "close", _this2).call(_this2);
-        }).catch(function (error) {
-          console.log(error);
-        });
+        _this2._submitForm();
       });
     }
   }]);
@@ -543,17 +573,6 @@ var PopupWithForm = /*#__PURE__*/function (_Popup) {
         _this2._inputValues[input.name] = input.value;
       });
       return this._inputValues;
-    }
-  }, {
-    key: "setInputValues",
-    value: function setInputValues(data) {
-      this._inputList.forEach(function (input) {
-        if (input.name === 'info') {
-          input.value = data.info;
-        } else {
-          input.value = data[input.name];
-        }
-      });
     }
   }, {
     key: "close",
@@ -660,11 +679,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var Section = /*#__PURE__*/function () {
-  function Section(_ref, container) {
-    var items = _ref.items,
-      renderer = _ref.renderer;
+  function Section(renderer, container) {
     _classCallCheck(this, Section);
-    this._items = items;
     this._renderer = renderer;
     this._container = container;
   }
@@ -675,9 +691,9 @@ var Section = /*#__PURE__*/function () {
     }
   }, {
     key: "renderItems",
-    value: function renderItems() {
+    value: function renderItems(items) {
       var _this = this;
-      this._items.forEach(function (item) {
+      items.forEach(function (item) {
         _this._renderer(item);
       });
     }
@@ -685,6 +701,40 @@ var Section = /*#__PURE__*/function () {
   return Section;
 }();
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Section);
+
+/***/ }),
+
+/***/ "./src/components/UserAvatar.js":
+/*!**************************************!*\
+  !*** ./src/components/UserAvatar.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+var UserAvatar = /*#__PURE__*/function () {
+  function UserAvatar(avatarSelector) {
+    _classCallCheck(this, UserAvatar);
+    this._avatarSelector = avatarSelector;
+  }
+  _createClass(UserAvatar, [{
+    key: "setAvatar",
+    value: function setAvatar(avatar) {
+      this._avatar = avatar;
+      this._avatarSelector.style.backgroundImage = "url(".concat(this._avatar, ")");
+    }
+  }]);
+  return UserAvatar;
+}();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UserAvatar);
 
 /***/ }),
 
@@ -705,13 +755,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var UserInfo = /*#__PURE__*/function () {
-  function UserInfo(_ref, avatarSelector) {
+  function UserInfo(_ref) {
     var profileNameSelector = _ref.profileNameSelector,
       profileDescriptionSelector = _ref.profileDescriptionSelector;
     _classCallCheck(this, UserInfo);
     this._profileName = document.querySelector(profileNameSelector);
     this._profileDescription = document.querySelector(profileDescriptionSelector);
-    this._avatarSelector = avatarSelector;
   }
   _createClass(UserInfo, [{
     key: "getUserInfo",
@@ -727,15 +776,12 @@ var UserInfo = /*#__PURE__*/function () {
     value: function setUserInfo(_ref2) {
       var name = _ref2.name,
         about = _ref2.about,
-        avatar = _ref2.avatar,
         _id = _ref2._id;
       this._name = name;
       this._about = about;
-      this._avatar = avatar;
       this._id = _id;
       this._profileName.textContent = name;
       this._profileDescription.textContent = about;
-      this._avatarSelector.style.backgroundImage = "url(".concat(this._avatar, ")");
     }
   }]);
   return UserInfo;
@@ -902,10 +948,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/PopupWithImage.js */ "./src/components/PopupWithImage.js");
 /* harmony import */ var _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/PopupWithForm.js */ "./src/components/PopupWithForm.js");
 /* harmony import */ var _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/UserInfo.js */ "./src/components/UserInfo.js");
-/* harmony import */ var _components_Api_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/Api.js */ "./src/components/Api.js");
-/* harmony import */ var _components_PopupDelete_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/PopupDelete.js */ "./src/components/PopupDelete.js");
-/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./index.css */ "./src/pages/index.css");
-/* harmony import */ var _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/constants.js */ "./src/utils/constants.js");
+/* harmony import */ var _components_UserAvatar_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/UserAvatar.js */ "./src/components/UserAvatar.js");
+/* harmony import */ var _components_Api_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/Api.js */ "./src/components/Api.js");
+/* harmony import */ var _components_PopupDelete_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/PopupDelete.js */ "./src/components/PopupDelete.js");
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./index.css */ "./src/pages/index.css");
+/* harmony import */ var _utils_constants_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../utils/constants.js */ "./src/utils/constants.js");
 
 
 
@@ -916,15 +963,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var api = new _components_Api_js__WEBPACK_IMPORTED_MODULE_6__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.optionsApi);
-var cardsSection = new _components_Section_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
-  items: _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.initialCards,
-  renderer: createCard
-}, _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.elements);
+
+var api = new _components_Api_js__WEBPACK_IMPORTED_MODULE_7__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.optionsApi);
+var cardsSection = new _components_Section_js__WEBPACK_IMPORTED_MODULE_2__["default"](createCard, _utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.elements);
 var userInfo = new _components_UserInfo_js__WEBPACK_IMPORTED_MODULE_5__["default"]({
   profileNameSelector: '.profile__name',
   profileDescriptionSelector: '.profile__description'
-}, _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.profileAvatar);
+});
+var userAvatar = new _components_UserAvatar_js__WEBPACK_IMPORTED_MODULE_6__["default"](_utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.profileAvatar);
 var popupAddCard = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
   popupSelector: '#popup-element',
   submitForm: submitAddForm
@@ -938,22 +984,13 @@ var popupEditAvatar = new _components_PopupWithForm_js__WEBPACK_IMPORTED_MODULE_
   submitForm: submitAvatarForm
 });
 var popupWithImage = new _components_PopupWithImage_js__WEBPACK_IMPORTED_MODULE_3__["default"]('#popup-image');
-var popupDelete = new _components_PopupDelete_js__WEBPACK_IMPORTED_MODULE_7__["default"]('.popup__delete-form');
+var popupDelete = new _components_PopupDelete_js__WEBPACK_IMPORTED_MODULE_8__["default"]('#popup-delete', null);
 
 //функция создания карточки
 function createCard(data) {
   var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_0__["default"](data, '#element-template', openImagePopup, function () {
-    api.setLikes(data.id, data.isLiked);
-  }, function () {
-    return popupDelete.open(function () {
-      api.deleteCard(id).then(function () {
-        card.handleDeleteButton();
-        popupDelete.close();
-      }).catch(function (err) {
-        console.log(err);
-      });
-    });
-  }, userInfo.getUserInfo().id);
+    api.setLikes(data._id, card.isLiked());
+  }, handleDeleteFunction, userInfo.getUserInfo().id);
   return card.getView();
 }
 
@@ -967,6 +1004,8 @@ function submitEditForm(formData) {
     popupEditProfile.close();
   }).catch(function (err) {
     console.log(err);
+  }).finally(function () {
+    return popupEditProfile.showPreloader(false);
   });
 }
 
@@ -975,10 +1014,12 @@ function submitAvatarForm(inputs) {
   var avatarUrl = inputs['avatar-url'];
   popupEditAvatar.showPreloader();
   api.editAvatar(avatarUrl).then(function (data) {
-    userInfo.setUserInfo(data);
+    userAvatar.setAvatar(data.avatar);
     popupEditAvatar.close();
   }).catch(function (err) {
     return console.log(err);
+  }).finally(function () {
+    return popupEditAvatar.showPreloader(false);
   });
 }
 
@@ -993,6 +1034,8 @@ function submitAddForm(inputs) {
     popupAddCard.close();
   }).catch(function (err) {
     return console.log(err);
+  }).finally(function () {
+    return popupEditProfile.showPreloader(false);
   });
 }
 
@@ -1004,9 +1047,22 @@ function openImagePopup(name, link) {
 //функция открытия попапа профиля
 function openEditPopup() {
   var userElement = userInfo.getUserInfo();
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.nameInput.value = userElement.name;
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.descriptionInput.value = userElement.about;
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.nameInput.value = userElement.name;
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.descriptionInput.value = userElement.about;
   popupEditProfile.open();
+}
+
+//функция удаления попапа
+function handleDeleteFunction(card) {
+  popupDelete.open();
+  popupDelete.submitFunction(function () {
+    api.deleteCard(card._id).then(function () {
+      card.handleDeleteButton();
+      popupDelete.close();
+    }).catch(function (err) {
+      return console.log(err);
+    });
+  });
 }
 
 //функция валидации формы
@@ -1014,15 +1070,15 @@ function validateForm(config, form) {
   var formValidator = new _components_FormValidator_js__WEBPACK_IMPORTED_MODULE_1__["default"](config, form);
   formValidator.enableValidation();
 }
-validateForm(_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.validationConfig, _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupProfileForm);
-validateForm(_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.validationConfig, _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.popupAddCardForm);
-validateForm(_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.validationConfig, _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.avatarForm);
-cardsSection.renderItems();
-_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.addPopupButton.addEventListener('click', function () {
+validateForm(_utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.validationConfig, _utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.popupProfileForm);
+validateForm(_utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.validationConfig, _utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.popupAddCardForm);
+validateForm(_utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.validationConfig, _utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.avatarForm);
+cardsSection.renderItems([]);
+_utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.addPopupButton.addEventListener('click', function () {
   popupAddCard.open();
 });
-_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.editPopupButton.addEventListener('click', openEditPopup);
-_utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.profileAvatar.addEventListener('click', function () {
+_utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.editPopupButton.addEventListener('click', openEditPopup);
+_utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.profileAvatar.addEventListener('click', function () {
   popupEditAvatar.open();
 });
 popupAddCard.setEventListeners();
@@ -1032,20 +1088,22 @@ popupEditAvatar.setEventListeners();
 popupDelete.setEventListeners();
 Promise.all([api.getUser().then(function (user) {
   userInfo.setUserInfo(user);
+  userAvatar.setAvatar(user.avatar);
   var backgroundImage = "url(".concat(user.avatar, ")");
-  _utils_constants_js__WEBPACK_IMPORTED_MODULE_9__.profileAvatar.computedStyleMap.backgroundImage = backgroundImage;
+  _utils_constants_js__WEBPACK_IMPORTED_MODULE_10__.profileAvatar.computedStyleMap.backgroundImage = backgroundImage;
 }).catch(function (err) {
   return console.log(err);
-})]);
-Promise.all([api.getAllCards().then(function (cards) {
+})], api.getAllCards().then(function (cards) {
+  var _userInfo$getUserInfo = userInfo.getUserInfo(),
+    userId = _userInfo$getUserInfo.id;
   cards.reverse().forEach(function (card) {
     var cardEl = createCard(card);
     cardsSection.addItem(cardEl);
   });
-  cardsSection.renderItems();
+  cardsSection.renderItems([]);
 }).catch(function (err) {
   return console.log(err);
-})]);
+}));
 })();
 
 /******/ })()
