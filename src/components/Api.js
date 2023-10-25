@@ -63,20 +63,9 @@ class Api {
   }
 
   setLikes(cardId, isLiked) {
-    //поменять местами put и delete?
-    const method = !isLiked ? 'PUT' : 'DELETE';
-    const url = `${this._url}/cards/${cardId}/likes`;
-
-    return fetch(url, {
-      method: method,
+    return this._sendRequest(`${this._url}/cards/${cardId}/likes`, {
+      method: !isLiked ? 'PUT' : 'DELETE',
       headers: this._headers
-    }).then(response => {
-      if (!response.ok) {
-        return response.json().then(err => {
-          throw err;
-        });
-      }
-      return response.json();
     });
   }
 
