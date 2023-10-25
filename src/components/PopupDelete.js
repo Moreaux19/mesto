@@ -4,8 +4,7 @@ class PopupDelete extends Popup {
   constructor(popupSelector, submitForm = null) {
     super(popupSelector);
     this._submitForm = submitForm;
-    this._popupForm = this._popup.querySelector('.popup__form');
-    this._deleteButton = this._popupForm.querySelector('.popup__delete-button');
+    this._form = this._popup.querySelector('.popup__form');
   }
 
   submitFunction(callback) {
@@ -14,7 +13,7 @@ class PopupDelete extends Popup {
 
   setEventListeners() {
     super.setEventListeners();
-    this._deleteButton.addEventListener('click', () => {
+    this._form.addEventListener('click', () => {
       this._submitForm();
     });
   }
