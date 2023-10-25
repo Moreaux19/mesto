@@ -90,19 +90,9 @@ var Api = /*#__PURE__*/function () {
   }, {
     key: "setLikes",
     value: function setLikes(cardId, isLiked) {
-      //поменять местами put и delete?
-      var method = !isLiked ? 'PUT' : 'DELETE';
-      var url = "".concat(this._url, "/cards/").concat(cardId, "/likes");
-      return fetch(url, {
-        method: method,
+      return this._sendRequest("".concat(this._url, "/cards/").concat(cardId, "/likes"), {
+        method: !isLiked ? 'PUT' : 'DELETE',
         headers: this._headers
-      }).then(function (response) {
-        if (!response.ok) {
-          return response.json().then(function (err) {
-            throw err;
-          });
-        }
-        return response.json();
       });
     }
   }, {
@@ -496,8 +486,7 @@ var PopupDelete = /*#__PURE__*/function (_Popup) {
     _classCallCheck(this, PopupDelete);
     _this = _super.call(this, popupSelector);
     _this._submitForm = submitForm;
-    _this._popupForm = _this._popup.querySelector('.popup__form');
-    _this._deleteButton = _this._popupForm.querySelector('.popup__delete-button');
+    _this._form = _this._popup.querySelector('.popup__form');
     return _this;
   }
   _createClass(PopupDelete, [{
@@ -510,7 +499,7 @@ var PopupDelete = /*#__PURE__*/function (_Popup) {
     value: function setEventListeners() {
       var _this2 = this;
       _get(_getPrototypeOf(PopupDelete.prototype), "setEventListeners", this).call(this);
-      this._deleteButton.addEventListener('click', function () {
+      this._form.addEventListener('click', function () {
         _this2._submitForm();
       });
     }
@@ -806,8 +795,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   editPopup: () => (/* binding */ editPopup),
 /* harmony export */   editPopupButton: () => (/* binding */ editPopupButton),
 /* harmony export */   elements: () => (/* binding */ elements),
-/* harmony export */   imageNameInput: () => (/* binding */ imageNameInput),
-/* harmony export */   imageUrlInput: () => (/* binding */ imageUrlInput),
 /* harmony export */   initialCards: () => (/* binding */ initialCards),
 /* harmony export */   nameInput: () => (/* binding */ nameInput),
 /* harmony export */   optionsApi: () => (/* binding */ optionsApi),
@@ -816,6 +803,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   profileAvatar: () => (/* binding */ profileAvatar),
 /* harmony export */   validationConfig: () => (/* binding */ validationConfig)
 /* harmony export */ });
+var elements = document.querySelector('.elements');
 var editPopupButton = document.querySelector('.profile__edit-button');
 var addPopupButton = document.querySelector('.profile__add-button');
 var editPopup = document.querySelector('#popup-profile');
@@ -824,9 +812,6 @@ var nameInput = popupProfileForm.querySelector('#name-input');
 var descriptionInput = popupProfileForm.querySelector('#description-input');
 var addPopup = document.querySelector('#popup-element');
 var popupAddCardForm = addPopup.querySelector('#popup-element-form');
-var imageNameInput = popupAddCardForm.querySelector('#image-name-input');
-var imageUrlInput = popupAddCardForm.querySelector('#image-url-input');
-var elements = document.querySelector('.elements');
 var profileAvatar = document.querySelector('#profile-avatar');
 var avatarPopup = document.querySelector('#popup-edit-avatar');
 var avatarForm = avatarPopup.querySelector('#avatar-form');
@@ -990,9 +975,11 @@ var popupDelete = new _components_PopupDelete_js__WEBPACK_IMPORTED_MODULE_8__["d
 function createCard(data) {
   var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_0__["default"](data, '#element-template', openImagePopup, function () {
     api.setLikes(data._id, card.isLiked());
+    console.log();
   }, handleDeleteFunction, userInfo.getUserInfo().id);
   return card.getView();
 }
+function handleLikeFunction() {}
 
 //функция редактирования профиля
 function submitEditForm(formData) {
@@ -1035,7 +1022,7 @@ function submitAddForm(inputs) {
   }).catch(function (err) {
     return console.log(err);
   }).finally(function () {
-    return popupEditProfile.showPreloader(false);
+    return popupAddCard.showPreloader(false);
   });
 }
 
