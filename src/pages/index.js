@@ -9,24 +9,17 @@ import Api from '../components/Api.js';
 import PopupDelete from '../components/PopupDelete.js';
 import './index.css';
 import {
+  elements,
   editPopupButton,
   addPopupButton,
+  popupProfileForm,
   nameInput,
   descriptionInput,
-  imageNameInput,
-  imageUrlInput,
-  elements,
-  validationConfig,
-  initialCards,
-  popupProfileForm,
   popupAddCardForm,
   optionsApi,
-  nameElement,
-  urlElement,
-  inputName,
-  inputDescription,
   profileAvatar,
-  avatarForm
+  avatarForm,
+  validationConfig
 } from '../utils/constants.js';
 
 const api = new Api(optionsApi);
@@ -67,12 +60,15 @@ function createCard(data) {
     openImagePopup,
     () => {
       api.setLikes(data._id, card.isLiked());
+      console.log();
     },
     handleDeleteFunction,
     userInfo.getUserInfo().id
   );
   return card.getView();
 }
+
+function handleLikeFunction() {}
 
 //функция редактирования профиля
 function submitEditForm(formData) {
@@ -118,7 +114,7 @@ function submitAddForm(inputs) {
       popupAddCard.close();
     })
     .catch(err => console.log(err))
-    .finally(() => popupEditProfile.showPreloader(false));
+    .finally(() => popupAddCard.showPreloader(false));
 }
 
 //функция открытия изображения

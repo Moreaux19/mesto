@@ -1,3 +1,4 @@
+export const elements = document.querySelector('.elements');
 export const editPopupButton = document.querySelector('.profile__edit-button');
 export const addPopupButton = document.querySelector('.profile__add-button');
 export const editPopup = document.querySelector('#popup-profile');
@@ -6,9 +7,6 @@ export const nameInput = popupProfileForm.querySelector('#name-input');
 export const descriptionInput = popupProfileForm.querySelector('#description-input');
 export const addPopup = document.querySelector('#popup-element');
 export const popupAddCardForm = addPopup.querySelector('#popup-element-form');
-export const imageNameInput = popupAddCardForm.querySelector('#image-name-input');
-export const imageUrlInput = popupAddCardForm.querySelector('#image-url-input');
-export const elements = document.querySelector('.elements');
 export const profileAvatar = document.querySelector('#profile-avatar');
 export const avatarPopup = document.querySelector('#popup-edit-avatar');
 export const avatarForm = avatarPopup.querySelector('#avatar-form');
