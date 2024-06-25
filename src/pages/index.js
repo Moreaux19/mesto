@@ -59,16 +59,13 @@ function createCard(data) {
     '#element-template',
     openImagePopup,
     () => {
-      api.setLikes(data._id, card.isLiked());
-      console.log();
+      api.setLikes(data._id, card.isLiked()).then(res => card._setLikesData(res));
     },
     handleDeleteFunction,
     userInfo.getUserInfo().id
   );
   return card.getView();
 }
-
-function handleLikeFunction() {}
 
 //функция редактирования профиля
 function submitEditForm(formData) {
@@ -176,6 +173,25 @@ popupEditAvatar.setEventListeners();
 
 popupDelete.setEventListeners();
 
+// Promise.all([api.getUser(), api.getAllCards()])
+//   .then(user => {
+//     console.log(user);
+//     userInfo.setUserInfo(user);
+//     userAvatar.setAvatar(user.avatar);
+//     const backgroundImage = `url(${user.avatar})`;
+//     profileAvatar.computedStyleMap.backgroundImage = backgroundImage;
+//   })
+//   .then(cards => {
+//     console.log(cards);
+//     const { id: userId } = userInfo.getUserInfo();
+//     cards.reverse().forEach(card => {
+//       const cardEl = createCard(card);
+//       cardsSection.addItem(cardEl);
+//     });
+//     cardsSection.renderItems([]);
+//   })
+//   .catch(err => console.log(err));
+
 Promise.all(
   [
     api
@@ -200,3 +216,18 @@ Promise.all(
     })
     .catch(err => console.log(err))
 );
+
+// Promise.all([api.getUser(), api.getAllCards()])
+//   .then(([user, cards]) => {
+//     const userId = user._id;
+//     console.log(userId);
+//     const userName = user.name;
+//     const userAbout = user.about;
+//     const userAvatarEl = user.avatar;
+//     cards.forEach(element => (element.meID = userId));
+//     userInfo.setUserInfo({ name: userName, about: userAbout, _id: userId });
+//     userAvatar.setAvatar(userAvatarEl);
+//     cardsSection.addItem(cards);
+//     const cardEl = createCard(cards);
+//   })
+//   .catch(err => console.log(err));

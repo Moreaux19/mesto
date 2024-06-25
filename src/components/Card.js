@@ -67,13 +67,14 @@ class Card {
     this._handleCardClick(this._name, this._link);
   }
 
-  setLikesData(data) {
-    this._data.likes = data.likes;
-    this._updateLike();
+  updateLikesNumber(data) {
+    this._likes = data.likes;
+    this._likesNumber.textContent = this._likes.length;
+    return this._likesNumber.textContent;
   }
 
-  _updateLike() {
-    this._likesNumber.textContent = this._data.likes.length;
+  _setLikesData(data) {
+    this.updateLikesNumber(data);
     if (this.isLiked()) {
       this._likeButton.classList.add('element__button_active');
     } else {
@@ -94,7 +95,8 @@ class Card {
   // все слушатели
   _setListeners() {
     // кнопка лайка
-    this._likeButton.addEventListener('click', this._handleLikeButton.bind(this));
+    // this._likeButton.addEventListener('click', this._handleLikeButton.bind(this));
+    this._likeButton.addEventListener('click', this._handleLikeClick.bind(this));
     // удаление изображения
     this._deleteButton.addEventListener('click', () => this._handleDeleteClick(this));
     // открытие изображения
@@ -108,7 +110,7 @@ class Card {
     this._getElements();
     this._setData();
     this._setListeners();
-    this.setLikesData(this._data);
+    this._setLikesData(this._data);
     return this._newCard;
   }
 }
