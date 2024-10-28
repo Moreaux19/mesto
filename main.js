@@ -197,15 +197,16 @@ var Card = /*#__PURE__*/function () {
       this._handleCardClick(this._name, this._link);
     }
   }, {
-    key: "setLikesData",
-    value: function setLikesData(data) {
-      this._data.likes = data.likes;
-      this._updateLike();
+    key: "updateLikesNumber",
+    value: function updateLikesNumber(data) {
+      this._likes = data.likes;
+      this._likesNumber.textContent = this._likes.length;
+      return this._likesNumber.textContent;
     }
   }, {
-    key: "_updateLike",
-    value: function _updateLike() {
-      this._likesNumber.textContent = this._data.likes.length;
+    key: "_setLikesData",
+    value: function _setLikesData(data) {
+      this.updateLikesNumber(data);
       if (this.isLiked()) {
         this._likeButton.classList.add('element__button_active');
       } else {
@@ -232,7 +233,8 @@ var Card = /*#__PURE__*/function () {
     value: function _setListeners() {
       var _this2 = this;
       // кнопка лайка
-      this._likeButton.addEventListener('click', this._handleLikeButton.bind(this));
+      // this._likeButton.addEventListener('click', this._handleLikeButton.bind(this));
+      this._likeButton.addEventListener('click', this._handleLikeClick.bind(this));
       // удаление изображения
       this._deleteButton.addEventListener('click', function () {
         return _this2._handleDeleteClick(_this2);
@@ -249,7 +251,7 @@ var Card = /*#__PURE__*/function () {
       this._getElements();
       this._setData();
       this._setListeners();
-      this.setLikesData(this._data);
+      this._setLikesData(this._data);
       return this._newCard;
     }
   }]);
@@ -974,12 +976,12 @@ var popupDelete = new _components_PopupDelete_js__WEBPACK_IMPORTED_MODULE_8__["d
 //функция создания карточки
 function createCard(data) {
   var card = new _components_Card_js__WEBPACK_IMPORTED_MODULE_0__["default"](data, '#element-template', openImagePopup, function () {
-    api.setLikes(data._id, card.isLiked());
-    console.log();
+    api.setLikes(data._id, card.isLiked()).then(function (res) {
+      return card._setLikesData(res);
+    });
   }, handleDeleteFunction, userInfo.getUserInfo().id);
   return card.getView();
 }
-function handleLikeFunction() {}
 
 //функция редактирования профиля
 function submitEditForm(formData) {
@@ -1073,6 +1075,26 @@ popupEditProfile.setEventListeners();
 popupWithImage.setEventListeners();
 popupEditAvatar.setEventListeners();
 popupDelete.setEventListeners();
+
+// Promise.all([api.getUser(), api.getAllCards()])
+//   .then(user => {
+//     console.log(user);
+//     userInfo.setUserInfo(user);
+//     userAvatar.setAvatar(user.avatar);
+//     const backgroundImage = `url(${user.avatar})`;
+//     profileAvatar.computedStyleMap.backgroundImage = backgroundImage;
+//   })
+//   .then(cards => {
+//     console.log(cards);
+//     const { id: userId } = userInfo.getUserInfo();
+//     cards.reverse().forEach(card => {
+//       const cardEl = createCard(card);
+//       cardsSection.addItem(cardEl);
+//     });
+//     cardsSection.renderItems([]);
+//   })
+//   .catch(err => console.log(err));
+
 Promise.all([api.getUser().then(function (user) {
   userInfo.setUserInfo(user);
   userAvatar.setAvatar(user.avatar);
@@ -1091,6 +1113,21 @@ Promise.all([api.getUser().then(function (user) {
 }).catch(function (err) {
   return console.log(err);
 }));
+
+// Promise.all([api.getUser(), api.getAllCards()])
+//   .then(([user, cards]) => {
+//     const userId = user._id;
+//     console.log(userId);
+//     const userName = user.name;
+//     const userAbout = user.about;
+//     const userAvatarEl = user.avatar;
+//     cards.forEach(element => (element.meID = userId));
+//     userInfo.setUserInfo({ name: userName, about: userAbout, _id: userId });
+//     userAvatar.setAvatar(userAvatarEl);
+//     cardsSection.addItem(cards);
+//     const cardEl = createCard(cards);
+//   })
+//   .catch(err => console.log(err));
 })();
 
 /******/ })()
